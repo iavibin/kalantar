@@ -1,0 +1,323 @@
+.audioPlayerDock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background: rgba(11, 15, 25, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1.5px solid var(--border-gold-glow);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.65), 0 0 25px rgba(217, 107, 39, 0.15);
+  transition: transform var(--transition-smooth);
+}
+
+.playerInner {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 24px;
+  gap: 10px;
+}
+
+.primaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.trackMetaGroup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 260px;
+  max-width: 320px;
+}
+
+.trackIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--saffron-600), var(--gold-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(217, 107, 39, 0.4);
+}
+
+.trackText {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.trackTitle {
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trackVernacular {
+  font-family: var(--font-devanagari);
+  font-size: 0.78rem;
+  color: var(--text-gold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playbackControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.playToggleBtn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--saffron-600), var(--gold-500));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(217, 107, 39, 0.4);
+  transition: transform var(--transition-fast);
+}
+
+.playToggleBtn:hover {
+  transform: scale(1.08);
+}
+
+.secondaryControlBtn {
+  color: var(--text-muted);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.secondaryControlBtn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.secondaryControlBtnActive {
+  color: var(--gold-400);
+}
+
+.scrubberArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeInfoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.waveformCanvasContainer {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  position: relative;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.waveformBar {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  transition: background 0.15s ease;
+  min-height: 4px;
+}
+
+.waveformBarPlayed {
+  background: linear-gradient(180deg, var(--gold-400), var(--saffron-600));
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
+}
+
+.waveformBarHover {
+  background: rgba(212, 175, 55, 0.6);
+}
+
+.sideActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transcriptToggleBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--text-gold);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.transcriptToggleBtn:hover {
+  background: rgba(212, 175, 55, 0.22);
+}
+
+.speedSelector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.speedBtn {
+  padding: 2px 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.speedBtnActive {
+  background: var(--gold-500);
+  color: #000;
+  font-weight: 700;
+}
+
+/* Synchronized Lyrics / Transcripts Expandable Tray */
+.transcriptTray {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 14px;
+  margin-top: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.transcriptHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.transcriptTitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scriptModeGroup {
+  display: flex;
+  background: var(--bg-surface-2);
+  border-radius: var(--radius-full);
+  padding: 2px;
+  border: 1px solid var(--border-subtle);
+}
+
+.scriptBtn {
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.scriptBtnActive {
+  background: var(--bg-surface-3);
+  color: var(--text-gold);
+  font-weight: 600;
+}
+
+.verseCard {
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border-hairline);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.verseCardActive {
+  background: rgba(217, 107, 39, 0.15);
+  border-color: var(--gold-400);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.2);
+  transform: translateX(4px);
+}
+
+.verseScriptText {
+  font-family: var(--font-devanagari);
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.verseCardActive .verseScriptText {
+  color: var(--text-gold);
+  font-weight: 600;
+}
+
+.verseTransliteration {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.verseEnglish {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.verseNote {
+  font-size: 0.75rem;
+  color: #5eead4;
+  background: rgba(42, 157, 143, 0.1);
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  margin-top: 6px;
+  border-left: 2px solid var(--peacock-teal);
+}
+
+@media (max-width: 900px) {
+  .primaryRow {
+    flex-wrap: wrap;
+  }
+  .trackMetaGroup {
+    max-width: 100%;
+    width: 100%;
+  }
+  .scrubberArea {
+    order: 3;
+    width: 100%;
+  }
+}

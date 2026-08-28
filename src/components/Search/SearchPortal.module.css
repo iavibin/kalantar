@@ -1,0 +1,289 @@
+.portalSection {
+  padding: 30px 0 60px;
+}
+
+.controlsBar {
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.primaryFilters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filterLabel {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statusFilterGroup {
+  display: flex;
+  background: rgba(15, 23, 42, 0.7);
+  padding: 3px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  overflow-x: auto;
+}
+
+.statusBtn {
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.statusBtn:hover {
+  color: var(--text-primary);
+}
+
+.statusBtnActive {
+  background: var(--bg-surface-3);
+  color: var(--text-gold);
+  font-weight: 600;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.selectWrapper {
+  position: relative;
+}
+
+.filterSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 7px 32px 7px 12px;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filterSelect:hover {
+  border-color: var(--gold-400);
+}
+
+.selectIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+}
+
+.secondaryFilters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.activeFiltersList {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.activeFilterPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(217, 107, 39, 0.15);
+  border: 1px solid rgba(217, 107, 39, 0.35);
+  color: var(--text-saffron);
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.pillRemoveBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-saffron);
+  cursor: pointer;
+}
+
+.clearAllBtn {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.clearAllBtn:hover {
+  color: var(--text-primary);
+}
+
+.viewAndSortGroup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.viewModeToggle {
+  display: flex;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.viewModeBtn {
+  padding: 6px 10px;
+  border-radius: calc(var(--radius-sm) - 2px);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.viewModeBtnActive {
+  background: var(--bg-surface-3);
+  color: var(--text-gold);
+}
+
+.resultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.resultsCount {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.resultsCount strong {
+  color: var(--text-gold);
+  font-weight: 700;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+}
+
+/* Dossier Table View Mode */
+.tableContainer {
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.dossierTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.86rem;
+}
+
+.dossierTable th {
+  background: var(--bg-surface-2);
+  color: var(--text-muted);
+  padding: 14px 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.74rem;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.dossierTable td {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.dossierTable tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.tableTitle {
+  font-family: var(--font-heading);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-surface-1);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-medium);
+}
+
+.emptyTitle {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--text-gold);
+  margin-bottom: 8px;
+}
+
+.emptyDesc {
+  color: var(--text-muted);
+  max-width: 480px;
+  margin: 0 auto 20px;
+  font-size: 0.92rem;
+}
+
+.resetFiltersBtn {
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-3);
+  border: 1px solid var(--border-gold-glow);
+  color: var(--text-gold);
+  font-weight: 600;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 768px) {
+  .gridContainer {
+    grid-template-columns: 1fr;
+  }
+  .controlsBar {
+    padding: 14px;
+  }
+  .viewAndSortGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

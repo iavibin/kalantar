@@ -1,0 +1,155 @@
+.atlasContainer {
+  padding: 30px 0 60px;
+}
+
+.atlasGrid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 28px;
+  min-height: 600px;
+}
+
+.mapCard {
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.mapSvgWrapper {
+  width: 100%;
+  max-width: 580px;
+  position: relative;
+}
+
+.zonePath {
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+.zonePath:hover {
+  filter: brightness(1.25) drop-shadow(0 0 12px rgba(212, 175, 55, 0.5));
+  transform: translateY(-2px);
+}
+
+.zonePathActive {
+  filter: brightness(1.35) drop-shadow(0 0 18px rgba(217, 107, 39, 0.8));
+  stroke: #fff !important;
+  stroke-width: 2.5 !important;
+}
+
+.zoneCardList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 620px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.zoneItemCard {
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.zoneItemCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--zone-color, var(--gold-400));
+}
+
+.zoneItemCard:hover {
+  background: var(--bg-surface-2);
+  border-color: var(--border-gold-glow);
+  transform: translateX(4px);
+}
+
+.zoneItemActive {
+  background: var(--bg-surface-2);
+  border-color: var(--gold-400);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.18);
+}
+
+.zoneTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.zoneName {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.zoneLocalName {
+  font-family: var(--font-devanagari);
+  font-size: 0.8rem;
+  color: var(--text-gold);
+  margin-bottom: 8px;
+}
+
+.zoneDesc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.zoneMetaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 10px;
+}
+
+.zoneStatsPill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zoneExploreBtn {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--text-gold);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.zoneExploreBtn:hover {
+  background: var(--gold-500);
+  color: #000;
+}
+
+@media (max-width: 992px) {
+  .atlasGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,272 @@
+.graphContainer {
+  padding: 30px 0 60px;
+}
+
+.graphWrapper {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  min-height: 650px;
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.canvasArea {
+  position: relative;
+  width: 100%;
+  height: 650px;
+  background: radial-gradient(circle at 50% 50%, rgba(22, 32, 54, 0.7) 0%, rgba(9, 13, 22, 0.95) 100%);
+  overflow: hidden;
+}
+
+.graphSvg {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+.graphOverlayControls {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filterChipGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+}
+
+.filterBtn {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.filterBtnActive {
+  background: var(--bg-surface-3);
+  color: var(--text-gold);
+  border: 1px solid var(--border-gold-glow);
+}
+
+.zoomControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.85);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  width: fit-content;
+}
+
+.zoomBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+}
+
+.zoomBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.legendBar {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-hairline);
+  font-size: 0.74rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Side Detail Inspector */
+.inspectorPane {
+  background: var(--bg-surface-2);
+  border-left: 1px solid var(--border-hairline);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+
+.inspectorHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.nodeTypeBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.inspectorTitle {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.inspectorDesc {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.connectedSection {
+  margin-bottom: 20px;
+}
+
+.connectedTitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.connectionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.connectionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface-1);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.connectionItem:hover {
+  border-color: var(--gold-400);
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--text-gold);
+}
+
+.connectionRelation {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.inspectorActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.actionBtnPrimary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--saffron-600), var(--gold-500));
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.88rem;
+  box-shadow: 0 2px 10px rgba(217, 107, 39, 0.3);
+}
+
+.actionBtnPrimary:hover {
+  background: linear-gradient(135deg, var(--saffron-500), var(--gold-400));
+}
+
+.actionBtnSecondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.86rem;
+}
+
+.actionBtnSecondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+}
+
+@media (max-width: 992px) {
+  .graphWrapper {
+    grid-template-columns: 1fr;
+  }
+  .canvasArea {
+    height: 480px;
+  }
+  .inspectorPane {
+    border-left: none;
+    border-top: 1px solid var(--border-hairline);
+  }
+}
