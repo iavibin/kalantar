@@ -10,6 +10,7 @@ import { ContributeModal } from '../components/ContributeModal/ContributeModal';
 import { FieldRecorder } from '../components/FieldRecorder/FieldRecorder';
 import { AboutModal } from '../components/AboutModal/AboutModal';
 import { AuthModal } from '../components/AuthModal/AuthModal';
+import { AdminEditModal } from '../components/AdminEditModal/AdminEditModal';
 import { Footer } from '../components/Footer/Footer';
 
 import {
@@ -22,14 +23,12 @@ import {
 import { traditionsRepo } from '../data/traditionsRepo';
 
 export const Portal: React.FC = () => {
-  // Default tab: Orality Search
   const [activeTab, setActiveTab] = useState<ActiveTab>('search');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filters, setFilters] = useState<FacetFilterState>({
     sortBy: 'recommended'
   });
 
-  // Data states
   const [traditions, setTraditions] = useState<Tradition[]>([]);
   const [facetOptions, setFacetOptions] = useState<{
     categories: string[];
@@ -47,25 +46,24 @@ export const Portal: React.FC = () => {
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [knowledgeGraph, setKnowledgeGraph] = useState<KnowledgeGraphData>({ nodes: [], edges: [] });
   const [stats, setStats] = useState<PreservationStats>({
-    totalTraditions: 12,
-    totalDialects: 24,
-    totalAudioHours: 184.5,
-    endangeredDocumented: 9,
-    hereditaryLineages: 48,
-    communityAnnotations: 132
+    totalTraditions: 6,
+    totalDialects: 6,
+    totalAudioHours: 27.2,
+    endangeredDocumented: 5,
+    hereditaryLineages: 14,
+    communityAnnotations: 38
   });
 
-  // Player & Modal states
   const [activePlayingTradition, setActivePlayingTradition] = useState<Tradition | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [selectedDossierTradition, setSelectedDossierTradition] = useState<Tradition | null>(null);
+  const [editingTradition, setEditingTradition] = useState<Tradition | null>(null);
   const [isContributeOpen, setIsContributeOpen] = useState<boolean>(false);
   const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
   const [preselectedTradition, setPreselectedTradition] = useState<Tradition | null>(null);
   const [selectedGraphTraditionId, setSelectedGraphTraditionId] = useState<string | null>(null);
 
-  // Initial load of repository metadata
   useEffect(() => {
     const loadInitialData = async () => {
       try {
@@ -86,20 +84,27 @@ export const Portal: React.FC = () => {
     loadInitialData();
   }, []);
 
-  // Fetch traditions whenever filters or query change
+  const refreshTraditions = async () => {
+    const currentFilters: FacetFilterState = { ...filters, searchQuery };
+    const [result, updatedStats, kGraph] = await Promise.all([
+      traditionsRepo.getTraditions(currentFilters),
+      traditionsRepo.getPreservationStats(),
+      traditionsRepo.getKnowledgeGraph()
+    ]);
+    setTraditions(result);
+    setStats(updatedStats);
+    setKnowledgeGraph(kGraph);
+  };
+
   useEffect(() => {
     const fetchTraditions = async () => {
       const currentFilters: FacetFilterState = { ...filters, searchQuery };
       const result = await traditionsRepo.getTraditions(currentFilters);
       setTraditions(result);
-      if (!activePlayingTradition && result.length > 0) {
-        setActivePlayingTradition(result[0]);
-      }
     };
     fetchTraditions();
   }, [filters, searchQuery]);
 
-  // Audio Play toggle
   const handlePlayToggle = (tradition: Tradition) => {
     if (activePlayingTradition?.id === tradition.id) {
       setIsPlaying(!isPlaying);
@@ -109,7 +114,6 @@ export const Portal: React.FC = () => {
     }
   };
 
-  // Quick chip click in Hero
   const handleQuickChipClick = (motifOrTerm: string) => {
     if (motifOrTerm === 'Endangered Dialects') {
       setFilters({ ...filters, vulnerabilityStatus: 'critical' });
@@ -142,24 +146,30 @@ export const Portal: React.FC = () => {
     setFilters({ sortBy: 'recommended' });
   };
 
-  const refreshStats = () => {
-    traditionsRepo.getPreservationStats().then(setStats);
+  const handleDeleteTradition = async (id: string) => {
+    await traditionsRepo.deleteTradition(id);
+    if (activePlayingTradition?.id === id) {
+      setIsPlaying(false);
+      setActivePlayingTradition(null);
+    }
+    await refreshTraditions();
+  };
+
+  const handleSaveEdit = async (id: string, updates: Partial<Tradition>) => {
+    await traditionsRepo.updateTradition(id, updates);
+    setEditingTradition(null);
+    await refreshTraditions();
   };
 
   return (
     <div className="portal-page">
-      {/* Top Header */}
       <Header
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onOpenContribute={() => handleOpenContribute()}
         onOpenAbout={() => setIsAboutOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
-        totalTraditions={traditions.length}
-        totalDialects={stats.totalDialects}
       />
 
-      {/* Hero — hidden on recorder tab */}
       {activeTab !== 'recorder' && (
         <Hero
           searchQuery={searchQuery}
@@ -174,7 +184,6 @@ export const Portal: React.FC = () => {
         />
       )}
 
-      {/* Main Content — single canonical container width */}
       <main className="container">
         {activeTab === 'search' && (
           <SearchPortal
@@ -187,6 +196,8 @@ export const Portal: React.FC = () => {
             onPlayToggle={handlePlayToggle}
             onOpenDossier={handleOpenDossier}
             onOpenGraphNode={handleOpenGraphNode}
+            onEditTradition={setEditingTradition}
+            onDeleteTradition={handleDeleteTradition}
           />
         )}
 
@@ -211,7 +222,6 @@ export const Portal: React.FC = () => {
         {activeTab === 'recorder' && <FieldRecorder />}
       </main>
 
-      {/* Persistent dockable audio player */}
       {activePlayingTradition && (
         <AudioPlayer
           tradition={activePlayingTradition}
@@ -224,7 +234,6 @@ export const Portal: React.FC = () => {
         />
       )}
 
-      {/* Deep Archival Dossier Modal */}
       {selectedDossierTradition && (
         <TraditionModal
           tradition={selectedDossierTradition}
@@ -237,23 +246,32 @@ export const Portal: React.FC = () => {
         />
       )}
 
-      {/* Community Annotation Modal */}
+      {editingTradition && (
+        <AdminEditModal
+          tradition={editingTradition}
+          onClose={() => setEditingTradition(null)}
+          onSave={handleSaveEdit}
+        />
+      )}
+
       {isContributeOpen && (
         <ContributeModal
           traditions={traditions}
           preselectedTradition={preselectedTradition}
           onClose={() => setIsContributeOpen(false)}
-          onAnnotationSuccess={refreshStats}
+          onAnnotationSuccess={refreshTraditions}
         />
       )}
 
-      {/* About Us Modal */}
       {isAboutOpen && <AboutModal onClose={() => setIsAboutOpen(false)} />}
 
-      {/* Volunteer / Staff Auth Modal */}
-      {isAuthOpen && <AuthModal onClose={() => setIsAuthOpen(false)} />}
+      {isAuthOpen && (
+        <AuthModal
+          onClose={() => setIsAuthOpen(false)}
+          onVolunteerSuccess={() => setActiveTab('recorder')}
+        />
+      )}
 
-      {/* Footer */}
       <Footer
         onTabChange={setActiveTab}
         onOpenContribute={() => handleOpenContribute()}

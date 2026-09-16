@@ -1,32 +1,28 @@
 import React from 'react';
 import styles from './Header.module.css';
-import { SearchIcon, GraphIcon, SparklesIcon, MicIcon } from '../common/Icons';
+import { SearchIcon, GraphIcon, SparklesIcon, MicIcon, ShieldCheckIcon } from '../common/Icons';
+import { useAuth } from '../../context/AuthContext';
 
 export type ActiveTab = 'search' | 'graph' | 'exhibitions' | 'recorder';
 
 interface HeaderProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
-  onOpenContribute: () => void;
   onOpenAbout: () => void;
   onOpenAuth: () => void;
-  totalTraditions: number;
-  totalDialects: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   onTabChange,
-  onOpenContribute,
   onOpenAbout,
-  onOpenAuth,
-  totalTraditions,
-  totalDialects
+  onOpenAuth
 }) => {
+  const { userRole, logout } = useAuth();
+
   return (
     <header className={styles.header}>
       <div className={`container ${styles.headerInner}`}>
-        {/* Brand Group */}
         <div className={styles.brandGroup} onClick={() => onTabChange('search')}>
           <div className={styles.emblem}>
             <span className={styles.emblemContent}>க</span>
@@ -40,7 +36,6 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Navigation Tabs — 4 tabs, no Cultural Atlas */}
         <nav className={styles.navTabs}>
           <button
             className={`${styles.tabBtn} ${activeTab === 'search' ? styles.tabBtnActive : ''}`}
@@ -69,21 +64,14 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             className={`${styles.tabBtn} ${styles.tabBtnRecorder} ${activeTab === 'recorder' ? styles.tabBtnActive : ''}`}
             onClick={() => onTabChange('recorder')}
-            id="nav-tab-recorder"
+            id="nav-tab-contribute"
           >
             <MicIcon size={15} />
-            <span>Field Recorder</span>
+            <span>Contribute</span>
           </button>
         </nav>
 
-        {/* Header Actions */}
         <div className={styles.headerActions}>
-          <div className={styles.statsIndicator}>
-            <span className={styles.pulseDot} />
-            <span>{totalDialects} Dialects · {totalTraditions} Epics</span>
-          </div>
-
-          {/* About Us */}
           <button
             className={styles.aboutBtn}
             onClick={onOpenAbout}
@@ -93,25 +81,31 @@ export const Header: React.FC<HeaderProps> = ({
             About Us
           </button>
 
-          {/* Login */}
-          <button
-            className={styles.loginBtn}
-            onClick={onOpenAuth}
-            id="btn-login"
-            title="Volunteer registration or staff login"
-          >
-            Login
-          </button>
-
-          {/* Contribute Oral Lore */}
-          <button
-            className={styles.contributeBtn}
-            onClick={onOpenContribute}
-            id="btn-contribute-lore"
-          >
-            <MicIcon size={15} />
-            <span>Contribute</span>
-          </button>
+          {userRole === 'admin' ? (
+            <div className={styles.adminGroup}>
+              <div className={styles.adminBadge} id="badge-admin-mode">
+                <ShieldCheckIcon size={13} />
+                <span>Admin Mode</span>
+              </div>
+              <button
+                className={styles.logoutBtn}
+                onClick={logout}
+                id="btn-logout"
+                title="Sign out of Admin Mode"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              className={styles.loginBtn}
+              onClick={onOpenAuth}
+              id="btn-login"
+              title="Volunteer registration or staff login"
+            >
+              Login
+            </button>
+          )}
         </div>
       </div>
     </header>

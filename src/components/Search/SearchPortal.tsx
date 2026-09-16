@@ -21,6 +21,8 @@ interface SearchPortalProps {
   onPlayToggle: (tradition: Tradition) => void;
   onOpenDossier: (tradition: Tradition) => void;
   onOpenGraphNode?: (traditionId: string) => void;
+  onEditTradition?: (tradition: Tradition) => void;
+  onDeleteTradition?: (traditionId: string) => void;
 }
 
 export const SearchPortal: React.FC<SearchPortalProps> = ({
@@ -32,7 +34,9 @@ export const SearchPortal: React.FC<SearchPortalProps> = ({
   activePlayingId,
   onPlayToggle,
   onOpenDossier,
-  onOpenGraphNode
+  onOpenGraphNode,
+  onEditTradition,
+  onDeleteTradition
 }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
@@ -265,6 +269,8 @@ export const SearchPortal: React.FC<SearchPortalProps> = ({
                 onPlayToggle={onPlayToggle}
                 onOpenDossier={onOpenDossier}
                 onOpenGraphNode={onOpenGraphNode}
+                onEdit={onEditTradition}
+                onDelete={onDeleteTradition}
               />
             ))}
           </div>
