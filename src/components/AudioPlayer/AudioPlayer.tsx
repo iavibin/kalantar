@@ -278,7 +278,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         </div>
 
         {/* Synchronized Transcripts & Vernacular Lyrics Tray */}
-        {showLyrics && (
+        {showLyrics && tradition.verses.length > 0 && (
           <div className={styles.transcriptTray}>
             <div className={styles.transcriptHeader}>
               <div className={styles.transcriptTitle}>
@@ -341,6 +341,16 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Graceful placeholder when tradition has no transcribed verses (e.g. field recordings) */}
+        {showLyrics && tradition.verses.length === 0 && (
+          <div className={styles.transcriptTray} style={{ padding: '16px 20px', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+              No synchronized transcriptions available for this field recording yet.
+              Community annotators can add verses via the Contribute Oral Lore workflow.
+            </p>
           </div>
         )}
       </div>

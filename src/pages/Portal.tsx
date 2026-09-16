@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Header, ActiveTab } from '../components/Header/Header';
 import { Hero } from '../components/Hero/Hero';
 import { SearchPortal } from '../components/Search/SearchPortal';
 import { AudioPlayer } from '../components/AudioPlayer/AudioPlayer';
 import { KnowledgeGraph } from '../components/KnowledgeGraph/KnowledgeGraph';
-import { CulturalAtlas } from '../components/CulturalAtlas/CulturalAtlas';
 import { Exhibitions } from '../components/Exhibitions/Exhibitions';
 import { TraditionModal } from '../components/TraditionModal/TraditionModal';
 import { ContributeModal } from '../components/ContributeModal/ContributeModal';
+import { FieldRecorder } from '../components/FieldRecorder/FieldRecorder';
+import { AboutModal } from '../components/AboutModal/AboutModal';
+import { AuthModal } from '../components/AuthModal/AuthModal';
 import { Footer } from '../components/Footer/Footer';
 
 import {
   Tradition,
-  CulturalZone,
   Exhibition,
   KnowledgeGraphData,
   PreservationStats,
@@ -22,6 +22,7 @@ import {
 import { traditionsRepo } from '../data/traditionsRepo';
 
 export const Portal: React.FC = () => {
+  // Default tab: Orality Search
   const [activeTab, setActiveTab] = useState<ActiveTab>('search');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filters, setFilters] = useState<FacetFilterState>({
@@ -43,7 +44,6 @@ export const Portal: React.FC = () => {
     instruments: [],
     motifs: []
   });
-  const [culturalZones, setCulturalZones] = useState<CulturalZone[]>([]);
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [knowledgeGraph, setKnowledgeGraph] = useState<KnowledgeGraphData>({ nodes: [], edges: [] });
   const [stats, setStats] = useState<PreservationStats>({
@@ -60,52 +60,46 @@ export const Portal: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [selectedDossierTradition, setSelectedDossierTradition] = useState<Tradition | null>(null);
   const [isContributeOpen, setIsContributeOpen] = useState<boolean>(false);
+  const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
+  const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
   const [preselectedTradition, setPreselectedTradition] = useState<Tradition | null>(null);
   const [selectedGraphTraditionId, setSelectedGraphTraditionId] = useState<string | null>(null);
 
   // Initial load of repository metadata
-  const loadInitialData = async () => {
-    try {
-      const [fOptions, cZones, exhibs, kGraph, pStats] = await Promise.all([
-        traditionsRepo.getFilterFacets(),
-        traditionsRepo.getCulturalZones(),
-        traditionsRepo.getCuratedExhibitions(),
-        traditionsRepo.getKnowledgeGraph(),
-        traditionsRepo.getPreservationStats()
-      ]);
-      setFacetOptions(fOptions);
-      setCulturalZones(cZones);
-      setExhibitions(exhibs);
-      setKnowledgeGraph(kGraph);
-      setStats(pStats);
-    } catch (err) {
-      console.error('Error loading repository data:', err);
-    }
-  };
-
   useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const [fOptions, exhibs, kGraph, pStats] = await Promise.all([
+          traditionsRepo.getFilterFacets(),
+          traditionsRepo.getCuratedExhibitions(),
+          traditionsRepo.getKnowledgeGraph(),
+          traditionsRepo.getPreservationStats()
+        ]);
+        setFacetOptions(fOptions);
+        setExhibitions(exhibs);
+        setKnowledgeGraph(kGraph);
+        setStats(pStats);
+      } catch (err) {
+        console.error('Error loading repository data:', err);
+      }
+    };
     loadInitialData();
   }, []);
 
   // Fetch traditions whenever filters or query change
   useEffect(() => {
     const fetchTraditions = async () => {
-      const currentFilters: FacetFilterState = {
-        ...filters,
-        searchQuery
-      };
+      const currentFilters: FacetFilterState = { ...filters, searchQuery };
       const result = await traditionsRepo.getTraditions(currentFilters);
       setTraditions(result);
-
       if (!activePlayingTradition && result.length > 0) {
         setActivePlayingTradition(result[0]);
       }
     };
-
     fetchTraditions();
   }, [filters, searchQuery]);
 
-  // Audio Play toggle handler
+  // Audio Play toggle
   const handlePlayToggle = (tradition: Tradition) => {
     if (activePlayingTradition?.id === tradition.id) {
       setIsPlaying(!isPlaying);
@@ -125,18 +119,7 @@ export const Portal: React.FC = () => {
     }
     setActiveTab('search');
     const portalElement = document.getElementById('search-portal');
-    if (portalElement) {
-      portalElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleZoneSelectFromAtlas = (zoneName: string) => {
-    setFilters({ ...filters, culturalZone: zoneName });
-    setActiveTab('search');
-    const portalElement = document.getElementById('search-portal');
-    if (portalElement) {
-      portalElement.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (portalElement) portalElement.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleOpenGraphNode = (traditionId: string) => {
@@ -159,6 +142,10 @@ export const Portal: React.FC = () => {
     setFilters({ sortBy: 'recommended' });
   };
 
+  const refreshStats = () => {
+    traditionsRepo.getPreservationStats().then(setStats);
+  };
+
   return (
     <div className="portal-page">
       {/* Top Header */}
@@ -166,25 +153,29 @@ export const Portal: React.FC = () => {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onOpenContribute={() => handleOpenContribute()}
+        onOpenAbout={() => setIsAboutOpen(true)}
+        onOpenAuth={() => setIsAuthOpen(true)}
         totalTraditions={traditions.length}
         totalDialects={stats.totalDialects}
       />
 
-      {/* Hero Exploration Banner */}
-      <Hero
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onSearchSubmit={() => {
-          setActiveTab('search');
-          const el = document.getElementById('search-portal');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }}
-        onQuickChipClick={handleQuickChipClick}
-        stats={stats}
-      />
+      {/* Hero — hidden on recorder tab */}
+      {activeTab !== 'recorder' && (
+        <Hero
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onSearchSubmit={() => {
+            setActiveTab('search');
+            const el = document.getElementById('search-portal');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onQuickChipClick={handleQuickChipClick}
+          stats={stats}
+        />
+      )}
 
-      {/* Main Content Area based on Active Tab */}
-      <main>
+      {/* Main Content — single canonical container width */}
+      <main className="container">
         {activeTab === 'search' && (
           <SearchPortal
             traditions={traditions}
@@ -209,13 +200,6 @@ export const Portal: React.FC = () => {
           />
         )}
 
-        {activeTab === 'atlas' && (
-          <CulturalAtlas
-            zones={culturalZones}
-            onSelectZoneAndSearch={handleZoneSelectFromAtlas}
-          />
-        )}
-
         {activeTab === 'exhibitions' && (
           <Exhibitions
             exhibitions={exhibitions}
@@ -223,9 +207,11 @@ export const Portal: React.FC = () => {
             onPlayTradition={handlePlayToggle}
           />
         )}
+
+        {activeTab === 'recorder' && <FieldRecorder />}
       </main>
 
-      {/* Persistent Dockable Oral Audio Player */}
+      {/* Persistent dockable audio player */}
       {activePlayingTradition && (
         <AudioPlayer
           tradition={activePlayingTradition}
@@ -243,9 +229,7 @@ export const Portal: React.FC = () => {
         <TraditionModal
           tradition={selectedDossierTradition}
           onClose={() => setSelectedDossierTradition(null)}
-          onPlay={(t) => {
-            handlePlayToggle(t);
-          }}
+          onPlay={handlePlayToggle}
           onOpenAnnotate={(t) => {
             setSelectedDossierTradition(null);
             handleOpenContribute(t);
@@ -253,17 +237,21 @@ export const Portal: React.FC = () => {
         />
       )}
 
-      {/* Community Annotation & Contribution Modal */}
+      {/* Community Annotation Modal */}
       {isContributeOpen && (
         <ContributeModal
           traditions={traditions}
           preselectedTradition={preselectedTradition}
           onClose={() => setIsContributeOpen(false)}
-          onAnnotationSuccess={() => {
-            traditionsRepo.getPreservationStats().then(setStats);
-          }}
+          onAnnotationSuccess={refreshStats}
         />
       )}
+
+      {/* About Us Modal */}
+      {isAboutOpen && <AboutModal onClose={() => setIsAboutOpen(false)} />}
+
+      {/* Volunteer / Staff Auth Modal */}
+      {isAuthOpen && <AuthModal onClose={() => setIsAuthOpen(false)} />}
 
       {/* Footer */}
       <Footer

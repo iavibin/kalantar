@@ -177,3 +177,20 @@ export interface CommunityAnnotation {
   proposedText: string;
   referenceSource?: string;
 }
+
+export interface FieldRecordingSubmission {
+  id?: string;
+  traditionTitle: string;
+  leadPerformer: string;
+  approximateAge?: number;
+  region: string;
+  dialect: string;
+  communityLineage?: string;
+  hasSuccessor: boolean;
+  notes?: string;
+  audioBlobUrl: string;
+  durationSeconds?: number;
+  status?: 'queued_offline' | 'synced';
+  createdAt?: string;
+}
+

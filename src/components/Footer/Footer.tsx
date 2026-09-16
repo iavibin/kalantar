@@ -32,8 +32,8 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onOpenContribute })
           <ul className={styles.linkList}>
             <li className={styles.linkItem} onClick={() => onTabChange('search')}>Orality Search Portal</li>
             <li className={styles.linkItem} onClick={() => onTabChange('graph')}>Thematic Knowledge Graph</li>
-            <li className={styles.linkItem} onClick={() => onTabChange('atlas')}>Geographic Cultural Atlas</li>
             <li className={styles.linkItem} onClick={() => onTabChange('exhibitions')}>Curated Soundscapes</li>
+            <li className={styles.linkItem} onClick={() => onTabChange('recorder')}>Field Recorder</li>
           </ul>
         </div>
 
