@@ -164,3 +164,10 @@ export const UserTreeIcon: React.FC<IconProps> = ({ size = 20, color = 'currentC
     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
   </svg>
 );
+
+export const StopIcon: React.FC<IconProps> = ({ size = 20, color = 'currentColor', className, ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+    <rect x="6" y="6" width="12" height="12" rx="2" fill={color} />
+  </svg>
+);
+

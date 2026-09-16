@@ -11,8 +11,10 @@ import {
   KnowledgeEdge,
   PreservationStats,
   FacetFilterState,
-  CommunityAnnotation
+  CommunityAnnotation,
+  FieldRecordingSubmission
 } from './types';
+import type { OfflineRecording } from '../utils/offlineAudioStorage';
 import {
   TRADITIONS,
   TRADITION_ENTRIES,
@@ -29,6 +31,7 @@ class TraditionsRepository {
   private exhibitions: Exhibition[] = [...CURATED_EXHIBITIONS];
   private stats: PreservationStats = { ...PRESERVATION_STATS };
   private annotations: CommunityAnnotation[] = [];
+  private fieldRecordingsQueue: FieldRecordingSubmission[] = [];
 
   // Helper simulating realistic async response
   private async delay<T>(data: T, ms: number = 20): Promise<T> {
@@ -301,6 +304,130 @@ class TraditionsRepository {
       success: true,
       message: 'Oral annotation successfully submitted to the Kalantar Archival Verification Panel.'
     }, 150);
+  }
+
+  /**
+   * Save a field recording to the offline-first in-memory sync queue
+   */
+  public async submitFieldRecording(recording: FieldRecordingSubmission): Promise<{ success: boolean; message: string; id: string }> {
+    const entry: FieldRecordingSubmission = {
+      ...recording,
+      id: recording.id || `rec-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      createdAt: recording.createdAt || new Date().toISOString(),
+      status: 'queued_offline'
+    };
+    this.fieldRecordingsQueue.push(entry);
+    return this.delay({
+      success: true,
+      message: 'Saved locally — will sync when connection is available',
+      id: entry.id!
+    }, 150);
+  }
+
+  /**
+   * Retrieve all locally queued field recordings
+   */
+  public async getFieldRecordingsQueue(): Promise<FieldRecordingSubmission[]> {
+    return this.delay([...this.fieldRecordingsQueue]);
+  }
+
+  /**
+   * Promote an offline-captured OfflineRecording to a fully indexed Tradition entry.
+   * Calculates endangerment score from the practitioner's age and successor status,
+   * constructs a synthetic Tradition object, and appends it to the live traditions array
+   * so it is immediately searchable in the Search Portal.
+   *
+   * Endangerment score weights (simplified field formula):
+   *   - Practitioner age >= 75 → +40 pts
+   *   - Practitioner age >= 60 → +25 pts
+   *   - Practitioner age < 60  → +10 pts
+   *   - No successor            → +35 pts | Has successor → +5 pts
+   *   - Base recency weight     → +15 pts (freshly recorded, so medium urgency baseline)
+   */
+  public async submitFieldRecordingFromOffline(recording: OfflineRecording): Promise<Tradition> {
+    // --- Endangerment score (simplified field formula) ---
+    const ageScore =
+      recording.practitionerAge >= 75 ? 40
+      : recording.practitionerAge >= 60 ? 25
+      : 10;
+    const successorScore = recording.hasSuccessor ? 5 : 35;
+    const recencyScore = 15;
+    const rawScore = Math.min(100, ageScore + successorScore + recencyScore);
+
+    const vulnerabilityStatus =
+      rawScore >= 70 ? 'critical'
+      : rawScore >= 40 ? 'endangered'
+      : rawScore >= 20 ? 'vulnerable'
+      : 'thriving';
+
+    const id = `field-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    const recordingYear = new Date(recording.recordedAt).getFullYear();
+
+    const tradition: Tradition = {
+      id,
+      title: recording.traditionTitle || 'Untitled Field Recording',
+      vernacularTitle: recording.traditionTitle || 'Untitled Field Recording',
+      scriptLabel: recording.dialect || 'Unspecified',
+      region: recording.location || 'Unknown Region',
+      state: recording.location || 'Unknown Region',
+      dialect: recording.dialect || 'Unspecified Dialect',
+      languageFamily: 'Dravidian',
+      category: 'Heroic Ballad',
+      culturalZone: recording.location || 'Field Recording',
+
+      practitionerAge: recording.practitionerAge,
+      livingPractitionerCount: 1,
+      hasSuccessor: recording.hasSuccessor,
+      lastRecordedDaysAgo: 0,
+      vulnerabilityStatus,
+
+      tags: ['field-recording', recording.dialect, recording.location].filter(Boolean),
+      tagMetadata: {
+        theme: 'Field Documentation',
+        instruments: [],
+        mood: 'Documentary'
+      },
+      summary: `Field recording captured by Kalantar volunteer. Practitioner: ${recording.practitionerName}, Age: ${recording.practitionerAge}. Location: ${recording.location}.`,
+      historicalContext: 'Captured via Kalantar offline field recording system.',
+      performerLineage: {
+        leadPerformer: recording.practitionerName,
+        communityLineage: 'Field Documentation',
+        region: recording.location || 'Unknown',
+        state: recording.location || 'Unknown',
+        district: recording.location || 'Unknown',
+        bio: `Live field recording. Age: ${recording.practitionerAge}. Successor: ${recording.hasSuccessor ? 'Yes' : 'No'}.`
+      },
+      instruments: [],
+      ritualContext: 'Field Documentation',
+      motifs: [],
+      relatedIds: [],
+
+      audioTrack: {
+        id: `audio-${id}`,
+        title: recording.traditionTitle || 'Field Recording',
+        durationSeconds: recording.durationSeconds,
+        sampleRateKhz: 44.1,
+        recordingYear,
+        fieldRecordist: 'Kalantar Field Volunteer',
+        recordingLocation: recording.location || 'Unknown Location',
+        waveformPeaks: Array.from({ length: 40 }, () =>
+          parseFloat((0.2 + Math.random() * 0.8).toFixed(2))
+        ),
+        audioToneType: 'vocal_polyphony',
+        bpm: 0,
+        scaleOrRaga: undefined,
+        talaOrRhythm: undefined
+      },
+      verses: []
+    };
+
+    this.traditions.push(tradition);
+    this.stats.totalTraditions += 1;
+    if (vulnerabilityStatus === 'critical' || vulnerabilityStatus === 'endangered') {
+      this.stats.endangeredDocumented += 1;
+    }
+
+    return this.delay(tradition, 120);
   }
 }
 

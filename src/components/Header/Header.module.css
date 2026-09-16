@@ -129,6 +129,26 @@
   color: var(--gold-400);
 }
 
+/* Field Recorder tab — subtle red mic accent to distinguish it from archive tabs */
+.tabBtnRecorder {
+  color: var(--text-muted);
+}
+
+.tabBtnRecorder:hover {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.tabBtnRecorder.tabBtnActive {
+  color: #fca5a5;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(217, 107, 39, 0.18));
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.tabBtnRecorder.tabBtnActive svg {
+  color: #f87171;
+}
+
 .headerActions {
   display: flex;
   align-items: center;
@@ -156,6 +176,48 @@
   animation: pulseGlow 1.8s infinite;
 }
 
+.aboutBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.aboutBtn:hover {
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.loginBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: var(--radius-full);
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--text-gold);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.loginBtn:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.6);
+  transform: translateY(-1px);
+}
+
 .contributeBtn {
   display: flex;
   align-items: center;
@@ -169,6 +231,7 @@
   letter-spacing: 0.02em;
   box-shadow: 0 4px 14px rgba(217, 107, 39, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
 }
 
 .contributeBtn:hover {
