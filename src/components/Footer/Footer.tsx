@@ -30,10 +30,10 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onOpenContribute })
         <div>
           <div className={styles.colHeading}>Archive Modules</div>
           <ul className={styles.linkList}>
-            <li className={styles.linkItem} onClick={() => onTabChange('search')}>Orality Search Portal</li>
-            <li className={styles.linkItem} onClick={() => onTabChange('graph')}>Thematic Knowledge Graph</li>
-            <li className={styles.linkItem} onClick={() => onTabChange('exhibitions')}>Curated Soundscapes</li>
-            <li className={styles.linkItem} onClick={() => onTabChange('recorder')}>Field Recorder</li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Orality Search Portal</button></li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('graph')}>Thematic Knowledge Graph</button></li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('exhibitions')}>Curated Soundscapes</button></li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('recorder')}>Field Recorder</button></li>
           </ul>
         </div>
 
@@ -41,11 +41,11 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onOpenContribute })
         <div>
           <div className={styles.colHeading}>Living Traditions</div>
           <ul className={styles.linkList}>
-            <li className={styles.linkItem} onClick={() => onTabChange('search')}>Villu Paatu (Tamil Nadu)</li>
-            <li className={styles.linkItem} onClick={() => onTabChange('search')}>Theyyam Thottam (Kerala)</li>
-            <li className={styles.linkItem} onClick={() => onTabChange('search')}>Tenkutittu Yakshagana (Karnataka)</li>
-            <li className={styles.linkItem} onClick={() => onTabChange('search')}>Burrakatha (Andhra Pradesh)</li>
-            <li className={styles.linkItem} onClick={() => onTabChange('search')}>Oggu Katha (Telangana)</li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Villu Paatu (Tamil Nadu)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Theyyam Thottam (Kerala)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Tenkutittu Yakshagana (Karnataka)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Burrakatha (Andhra Pradesh)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Oggu Katha (Telangana)</button></li>
           </ul>
         </div>
 

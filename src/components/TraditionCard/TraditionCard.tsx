@@ -2,7 +2,8 @@ import React from 'react';
 import styles from './TraditionCard.module.css';
 import { Tradition } from '../../data/types';
 import { calculateEndangermentScore, getEndangermentLevel } from '../../data/endangermentScore';
-import { PlayIcon, PauseIcon, BookOpenIcon, GraphIcon } from '../common/Icons';
+import { PlayIcon, PauseIcon, BookOpenIcon, GraphIcon, EditIcon, TrashIcon } from '../common/Icons';
+import { useAuth } from '../../context/AuthContext';
 
 interface TraditionCardProps {
   tradition: Tradition;
@@ -10,6 +11,8 @@ interface TraditionCardProps {
   onPlayToggle: (tradition: Tradition) => void;
   onOpenDossier: (tradition: Tradition) => void;
   onOpenGraphNode?: (traditionId: string) => void;
+  onEdit?: (tradition: Tradition) => void;
+  onDelete?: (traditionId: string) => void;
 }
 
 export const TraditionCard: React.FC<TraditionCardProps> = ({
@@ -17,8 +20,11 @@ export const TraditionCard: React.FC<TraditionCardProps> = ({
   isPlaying,
   onPlayToggle,
   onOpenDossier,
-  onOpenGraphNode
+  onOpenGraphNode,
+  onEdit,
+  onDelete
 }) => {
+  const { userRole } = useAuth();
   const score = calculateEndangermentScore(tradition);
   const level = getEndangermentLevel(score);
 
@@ -42,10 +48,37 @@ export const TraditionCard: React.FC<TraditionCardProps> = ({
   return (
     <article className={styles.card}>
       <div>
-        {/* Top Header */}
         <div className={styles.cardHeader}>
           <span className={styles.zoneBadge}>{tradition.culturalZone}</span>
-          {getStatusBadge()}
+          <div className={styles.headerRightArea}>
+            {getStatusBadge()}
+            {userRole === 'admin' && (
+              <div className={styles.adminCardToolbar}>
+                <button
+                  className={styles.adminActionBtn}
+                  onClick={() => onEdit?.(tradition)}
+                  title="Edit Tradition"
+                  aria-label="Edit Tradition"
+                >
+                  <EditIcon size={13} />
+                  <span>Edit</span>
+                </button>
+                <button
+                  className={`${styles.adminActionBtn} ${styles.adminDeleteBtn}`}
+                  onClick={() => {
+                    if (window.confirm(`Permanently delete "${tradition.title}" from the archive?`)) {
+                      onDelete?.(tradition.id);
+                    }
+                  }}
+                  title="Delete Tradition"
+                  aria-label="Delete Tradition"
+                >
+                  <TrashIcon size={13} />
+                  <span>Delete</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Title Area */}

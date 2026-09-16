@@ -669,7 +669,7 @@ export const FieldRecorder: React.FC = () => {
             <button
               type="button"
               className={styles.syncAllBtn}
-              disabled={isSyncing || pendingCount === 0}
+              disabled={isSyncing || pendingCount === 0 || !isOnline}
               onClick={handleSyncAll}
               title={
                 pendingCount === 0

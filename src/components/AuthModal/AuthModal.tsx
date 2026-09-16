@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './AuthModal.module.css';
 import { CloseIcon, CheckIcon, ShieldCheckIcon } from '../common/Icons';
+import { useAuth } from '../../context/AuthContext';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -9,14 +10,16 @@ type AuthTab = 'volunteer' | 'staff';
 interface VolunteerPass {
   id: string;
   fullName: string;
-  email: string;
-  phone: string;
+  // email/phone are kept in component state only and are NOT persisted to storage
   state: string;
   joinedAt: string;
 }
 
 interface AuthModalProps {
   onClose: () => void;
+  /** Optional: called after a successful volunteer registration so the caller
+   *  can navigate to the Field Recorder tab. */
+  onVolunteerSuccess?: () => void;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -82,10 +85,11 @@ function buildQrPattern(seed: string): boolean[] {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ onClose, onVolunteerSuccess }) => {
+  const { loginAsAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState<AuthTab>('volunteer');
 
-  // Volunteer form state
+  // Volunteer form state — email and phone are ephemeral display-only; not stored
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -100,6 +104,50 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
   const [staffSuccess, setStaffSuccess] = useState(false);
   const [isStaffSubmitting, setIsStaffSubmitting] = useState(false);
 
+  // ── Accessibility: focus trap + Escape + focus restore ───────────────────
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    closeBtnRef.current?.focus();
+    return () => {
+      previousFocusRef.current?.focus();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const modal = modalRef.current;
+      if (!modal) return;
+
+      const focusable = Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !el.closest('[aria-hidden="true"]'));
+
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   // ── Volunteer submit ──────────────────────────────────────────────────────
 
   const handleVolunteerSubmit = (e: React.FormEvent) => {
@@ -112,18 +160,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
       const pass: VolunteerPass = {
         id: generateVolunteerId(volunteerState),
         fullName: fullName.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
+        // Email and phone are intentionally NOT included — PII must not be
+        // stored client-side until a proper consent, retention, deletion, and
+        // secure-storage design is in place. TODO: implement server-side registration.
         state: volunteerState,
         joinedAt,
       };
 
-      // Persist to localStorage (survives page refresh)
+      // Persist only non-sensitive fields: generated ID, state code, and join date.
       try {
-        const existing = JSON.parse(localStorage.getItem('kalantar_volunteers') || '[]') as VolunteerPass[];
-        existing.push(pass);
-        localStorage.setItem('kalantar_volunteers', JSON.stringify(existing));
-        localStorage.setItem('kalantar_current_volunteer', JSON.stringify(pass));
+        localStorage.setItem(
+          'kalantar_volunteer_pass',
+          JSON.stringify({ id: pass.id, state: pass.state, joinedAt: pass.joinedAt })
+        );
       } catch {
         // localStorage may be blocked in some environments
       }
@@ -134,6 +183,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
   };
 
   // ── Staff login submit ────────────────────────────────────────────────────
+  // NOTE: This is a MOCK authentication path for demonstration / local review
+  // only. The hardcoded credential check MUST be replaced with a server-side
+  // authentication service that issues a signed, HTTP-only session token before
+  // any production deployment. The localStorage flag written here is not a
+  // trusted authorization token — it is purely a UI hint with no enforcement.
 
   const handleStaffLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,14 +196,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
 
     setTimeout(() => {
       if (staffUser === 'admin' && staffPass === 'kalantar2026') {
-        try {
-          localStorage.setItem(
-            'kalantar_reviewer_session',
-            JSON.stringify({ role: 'reviewer', name: 'Archival Reviewer', loginAt: new Date().toISOString() })
-          );
-        } catch {
-          // ignore
-        }
+        loginAsAdmin();
         setStaffSuccess(true);
       } else {
         setStaffError('Invalid credentials. Please verify your staff username and passphrase.');
@@ -159,33 +206,48 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
   };
 
   // ── QR pattern ────────────────────────────────────────────────────────────
-
   const qrCells = volunteerPass ? buildQrPattern(volunteerPass.id) : [];
 
   // ─────────────────────────────────────────────────────────────────────────
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+    <div className={styles.overlay} onClick={onClose} aria-hidden="true">
+      <div
+        ref={modalRef}
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-modal-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          ref={closeBtnRef}
+          className={styles.closeBtn}
+          onClick={onClose}
+          aria-label="Close"
+        >
           <CloseIcon size={15} />
         </button>
 
         {/* Header */}
         <div className={styles.modalHeader}>
-          <h3 className={styles.modalTitle}>Kalantar Access Portal</h3>
+          <h3 id="auth-modal-title" className={styles.modalTitle}>Kalantar Access Portal</h3>
           <p className={styles.modalSubtitle}>
             Join as a field volunteer or sign in as an archival reviewer.
           </p>
 
           {/* Tab row */}
-          <div className={styles.tabRow}>
+          <div className={styles.tabRow} role="tablist">
             <button
+              role="tab"
+              aria-selected={activeTab === 'volunteer'}
               className={`${styles.tabBtn} ${activeTab === 'volunteer' ? styles.tabBtnActive : ''}`}
               onClick={() => setActiveTab('volunteer')}
             >
               🧑‍🤝‍🧑 Volunteer Registration
             </button>
             <button
+              role="tab"
+              aria-selected={activeTab === 'staff'}
               className={`${styles.tabBtn} ${activeTab === 'staff' ? styles.tabBtnActive : ''}`}
               onClick={() => setActiveTab('staff')}
             >
@@ -310,13 +372,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                         <ShieldCheckIcon size={12} style={{ display: 'inline', marginRight: 4 }} />
                         Open Access · Heritage Protocol
                       </span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem' }}>
-                        {volunteerPass.email}
-                      </span>
                     </div>
                   </div>
 
-                  <button className={styles.passDoneBtn} onClick={onClose}>
+                  {/* Close and navigate to Field Recorder */}
+                  <button
+                    className={styles.passDoneBtn}
+                    onClick={() => {
+                      onClose();
+                      onVolunteerSuccess?.();
+                    }}
+                  >
                     Start Recording Field Traditions →
                   </button>
                 </div>
@@ -330,7 +396,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
               {!staffSuccess ? (
                 <form onSubmit={handleStaffLogin}>
                   {staffError && (
-                    <div className={styles.errorBanner}>{staffError}</div>
+                    <div className={styles.errorBanner} role="alert">{staffError}</div>
                   )}
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Staff Username</label>

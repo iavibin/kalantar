@@ -24,16 +24,557 @@ import {
 } from './traditions';
 import { calculateEndangermentScore, getEndangermentLevel, EndangermentLevel } from './endangermentScore';
 
+export const SEEDED_TRADITIONS: Tradition[] = [
+  ...TRADITIONS,
+  {
+    id: 'trad-therukoothu',
+    title: 'Therukoothu — Draupadi Amman Natakam',
+    vernacularTitle: 'தெருக்கூத்து — திரௌபதி அம்மன் நாடகம்',
+    scriptLabel: 'Tamil Script',
+    region: 'Kanchipuram & Tiruvannamalai',
+    state: 'Tamil Nadu',
+    dialect: 'North Arcot Tamil',
+    languageFamily: 'Dravidian',
+    category: 'Open-Air Ritual Theatre',
+    culturalZone: 'Northern Arcot & Palar Basin',
+    practitionerAge: 79,
+    livingPractitionerCount: 2,
+    hasSuccessor: true,
+    lastRecordedDaysAgo: 40,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 84,
+    activeApprentices: 1,
+    community: 'Koothu Pattarai Bards',
+    duration: '6:10',
+    tags: ['Therukoothu', 'Draupadi Amman', 'Open-Air Theatre', 'North Arcot', 'Ritual Theatre'],
+    tagMetadata: {
+      theme: 'Open-Air Ritual Theatre',
+      instruments: ['Mukhaveenai (Double-reed pipe)', 'Mridangam', 'Kattumelam', 'Thalam'],
+      mood: 'Dramatic & Ritualistic'
+    },
+    summary: 'All-night sacred open-air dramatized recital performed in village squares during temple fire-walking festivals, memorized entirely through spoken verse (viruttam) without scripts.',
+    historicalContext: 'Enacted in rural Tamil village squares during annual Draupadi Amman fire-walking rituals with spoken viruttam cycles.',
+    performerLineage: {
+      leadPerformer: 'Dharmalingam Asan',
+      communityLineage: 'Koothu Pattarai Bards',
+      region: 'Kanchipuram & Tiruvannamalai',
+      state: 'Tamil Nadu',
+      district: 'Tiruvannamalai',
+      bio: 'Veteran Koothu master preserving unbroken spoken viruttam reciting traditions for over six decades.'
+    },
+    instruments: ['Mukhaveenai (Double-reed pipe)', 'Mridangam', 'Kattumelam', 'Thalam'],
+    ritualContext: 'All-night village square performances culminating in temple fire-walking ceremonies.',
+    motifs: ['Draupadi’s Sacred Vow', 'Fall of Duryodhana', 'Fire-Walking Sanctity'],
+    audioTrack: {
+      id: 'aud-therukoothu',
+      title: 'Therukoothu — Draupadi Amman Natakam',
+      durationSeconds: 370,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Tiruvannamalai, Tamil Nadu',
+      waveformPeaks: [0.4, 0.7, 0.88, 0.92, 0.95, 0.8, 0.85, 0.9, 0.82, 0.7, 0.9, 0.95, 0.8, 0.85, 0.95, 0.88, 0.75, 0.9, 0.95, 0.8, 0.65, 0.85, 0.9, 0.75, 0.6, 0.8, 0.9, 0.7, 0.5, 0.35],
+      audioToneType: 'aerophone_flute',
+      bpm: 130,
+      scaleOrRaga: 'Nattai Ritual Mode',
+      talaOrRhythm: 'Kattumelam Fast 8-count'
+    },
+    versesSnippet: 'பாரதப் போர்க்களம் பாவி துரியோதனன் வீழ... தர்மத்தின் குரலாய் திரௌபதி சபதம் நிறைவேறும்!\n(Upon the battleground as evil Duryodhana falls... Draupadi\'s vow is fulfilled by the voice of Dharma!)',
+    verses: [
+      {
+        id: 'the-v1',
+        timestamp: 0,
+        originalScript: 'பாரதப் போர்க்களம் பாவி துரியோதனன் வீழ... தர்மத்தின் குரலாய் திரௌபதி சபதம் நிறைவேறும்!',
+        scriptName: 'Tamil',
+        romanTransliteration: 'Pāratap pōrkkaḷam pāvi turiyōtaṉaṉ vīḻa... tarmattiṉ kuralāy tiraupati capatam niṟaivēṟum!',
+        englishTranslation: 'Upon the battleground as evil Duryodhana falls... Draupadi\'s vow is fulfilled by the voice of Dharma!',
+        culturalNote: 'Chanted with piercing double-reed Mukhaveenai accompaniment at the climactic midnight scene of the Mahabharata recital.'
+      }
+    ],
+    relatedIds: ['villu-pattu-muthupattan', 'trad-silambam-paattu'],
+    featured: true
+  },
+  {
+    id: 'trad-silambam-paattu',
+    title: 'Silambam Por-Paattu (Martial Ballad)',
+    vernacularTitle: 'சிலம்பப் போர்ப்பாட்டு — களரி வாய்மொழி மரபு',
+    scriptLabel: 'Tamil Script',
+    region: 'Madurai & Sivagangai',
+    state: 'Tamil Nadu',
+    dialect: 'Pandya Madurai Tamil',
+    languageFamily: 'Dravidian',
+    category: 'Martial Rhythms & Chivalric Lore',
+    culturalZone: 'Thamirabarani & Southern Plains',
+    practitionerAge: 75,
+    livingPractitionerCount: 3,
+    hasSuccessor: true,
+    lastRecordedDaysAgo: 50,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 73,
+    activeApprentices: 2,
+    community: 'Traditional Asan Lineages',
+    duration: '3:40',
+    tags: ['Silambam', 'Por-Paattu', 'Martial Lore', 'Madurai', 'Staff Combat'],
+    tagMetadata: {
+      theme: 'Martial Rhythms & Chivalric Lore',
+      instruments: ['Thappu (Frame Drum)', 'Kombu Horn'],
+      mood: 'Energetic & Chivalric'
+    },
+    summary: 'Rhythmic oral footwork mnemonics (chuvadus) and chivalric verses chanted during staff combat sparring, preserving pre-colonial Southern martial terminology.',
+    historicalContext: 'Chanted by martial arts masters (Asans) to guide disciples in staff fencing and combat maneuvers.',
+    performerLineage: {
+      leadPerformer: 'Sangaralingam Asan',
+      communityLineage: 'Traditional Asan Lineages',
+      region: 'Madurai & Sivagangai',
+      state: 'Tamil Nadu',
+      district: 'Madurai',
+      bio: 'Revered Silambam elder who preserves the oral mnemonic verses of Pandya staff fencing.'
+    },
+    instruments: ['Thappu (Frame Drum)', 'Kombu Horn'],
+    ritualContext: 'Martial sparring demonstrations and harvest festival combat arenas.',
+    motifs: ['Footwork Chuvadu', 'Bamboo Staff Whirl', 'Warrior Discipline'],
+    audioTrack: {
+      id: 'aud-silambam-paattu',
+      title: 'Silambam Por-Paattu (Martial Ballad)',
+      durationSeconds: 220,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Madurai, Tamil Nadu',
+      waveformPeaks: [0.3, 0.6, 0.85, 0.9, 0.95, 0.8, 0.85, 0.9, 0.8, 0.7, 0.85, 0.9, 0.8, 0.85, 0.9, 0.8, 0.7, 0.85, 0.9, 0.75, 0.6, 0.8, 0.85, 0.7, 0.55, 0.75, 0.8, 0.65, 0.45, 0.3],
+      audioToneType: 'percussive_chant',
+      bpm: 138,
+      scaleOrRaga: 'Martial Folk Cadence',
+      talaOrRhythm: 'Thappu Driving Syncopation'
+    },
+    versesSnippet: 'சுவடு பார்த்து அடி வை மகனே, தடியின் நுனியில் காற்றுப் பறக்கட்டும்!\n(Watch your step and strike true, my son; let the wind whistle off the bamboo tip!)',
+    verses: [
+      {
+        id: 'sil-v1',
+        timestamp: 0,
+        originalScript: 'சுவடு பார்த்து அடி வை மகனே, தடியின் நுனியில் காற்றுப் பறக்கட்டும்!',
+        scriptName: 'Tamil',
+        romanTransliteration: 'Cuvaṭu pārttu aṭi vai makaṉē, taṭiyiṉ nuṉiyil kāṟṟup paṟakkaṭṭum!',
+        englishTranslation: 'Watch your step and strike true, my son; let the wind whistle off the bamboo tip!',
+        culturalNote: 'Sung synchronously with foot movements (chuvadus) during traditional Tamil bamboo staff combat.'
+      }
+    ],
+    relatedIds: ['trad-therukoothu', 'marudha-nilam-oppari'],
+    featured: false
+  },
+  {
+    id: 'trad-kurumba-honey',
+    title: 'Kurumba Honey-Gathering Chants',
+    vernacularTitle: 'குறும்பா தேனெடுக்கும் வாய்மொழிப் பாடல்',
+    scriptLabel: 'Tamil Script',
+    region: 'Nilgiri Biosphere Slopes',
+    state: 'Tamil Nadu',
+    dialect: 'Alu Kurumba (Tribal Dravidian)',
+    languageFamily: 'Dravidian',
+    category: 'Indigenous Forest Lore',
+    culturalZone: 'Nilgiri Biosphere & Western Ghats',
+    practitionerAge: 81,
+    livingPractitionerCount: 1,
+    hasSuccessor: false,
+    lastRecordedDaysAgo: 25,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 95,
+    activeApprentices: 0,
+    community: 'Alu Kurumba Tribe',
+    duration: '4:05',
+    tags: ['Kurumba', 'Honey Gathering', 'Nilgiris', 'Forest Lore', 'Tribal Chant'],
+    tagMetadata: {
+      theme: 'Indigenous Forest Lore',
+      instruments: ['Buguri (Tribal Flute)', 'Are (Clay Drum)'],
+      mood: 'Ethereal & Sacred'
+    },
+    summary: 'Sacred appeasement chants whispered while rappelling sheer Nilgiri cliffs on wild vines to harvest rock-cliff honey, honoring jungle deities and cliff bees.',
+    historicalContext: 'Whispered by Alu Kurumba honey harvesters suspended on vine ladders down mountain chasms to appease rock spirits and wild bees.',
+    performerLineage: {
+      leadPerformer: 'Belli Kurumba',
+      communityLineage: 'Alu Kurumba Tribe',
+      region: 'Nilgiri Biosphere Slopes',
+      state: 'Tamil Nadu',
+      district: 'The Nilgiris',
+      bio: 'Eighty-one-year-old tribal elder possessing the esoteric appeasement songs for cliff-side honey gathering.'
+    },
+    instruments: ['Buguri (Tribal Flute)', 'Are (Clay Drum)'],
+    ritualContext: 'Seasonal cliffside wild honey harvesting rituals in dense Nilgiri gorge forests.',
+    motifs: ['Cliff Rock Spirits', 'Wild Forest Honey', 'Vine Ladder Descent'],
+    audioTrack: {
+      id: 'aud-kurumba-honey',
+      title: 'Kurumba Honey-Gathering Chants',
+      durationSeconds: 245,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Kotagiri, The Nilgiris',
+      waveformPeaks: [0.2, 0.4, 0.6, 0.7, 0.8, 0.75, 0.7, 0.75, 0.8, 0.65, 0.5, 0.6, 0.7, 0.65, 0.55, 0.65, 0.7, 0.6, 0.5, 0.6, 0.7, 0.6, 0.45, 0.5, 0.6, 0.5, 0.4, 0.35, 0.25, 0.2],
+      audioToneType: 'aerophone_flute',
+      bpm: 78,
+      scaleOrRaga: 'Tribal Microtonal Scale',
+      talaOrRhythm: 'Are Clay Drum Pulse'
+    },
+    versesSnippet: 'பாறை மடி மேல் தேன் சொட்டுதே, காவல்காரக் காடே வழியைக் காட்டு!\n(Upon the cliff\'s bosom wild honey drips; O guardian forest spirit, clear our path!)',
+    verses: [
+      {
+        id: 'kur-v1',
+        timestamp: 0,
+        originalScript: 'பாறை மடி மேல் தேன் சொட்டுதே, காவல்காரக் காடே வழியைக் காட்டு!',
+        scriptName: 'Tamil',
+        romanTransliteration: 'Pāṟai maṭi mēl tēṉ coṭṭutē, kāvalkārak kāṭē vaḻiyaik kāṭṭu!',
+        englishTranslation: 'Upon the cliff\'s bosom wild honey drips; O guardian forest spirit, clear our path!',
+        culturalNote: 'Sung in low whispers so as not to agitate the gigantic wild rock bees (Apis dorsata).'
+      }
+    ],
+    relatedIds: ['trad-toda-keli', 'trad-kaani-chants'],
+    featured: true
+  },
+  {
+    id: 'trad-toda-keli',
+    title: 'Thoda Keli Chants (Toda Pastoral Hymns)',
+    vernacularTitle: 'தோடர் எருமை வழிபாட்டுப் பாடல்',
+    scriptLabel: 'Tamil Script',
+    region: 'Ooty High Plateaus, Nilgiris',
+    state: 'Tamil Nadu',
+    dialect: 'Toda (Indo-Dravidian Archaic)',
+    languageFamily: 'Dravidian',
+    category: 'Pastoral Sacred Chants',
+    culturalZone: 'Nilgiri Biosphere & Western Ghats',
+    practitionerAge: 78,
+    livingPractitionerCount: 1,
+    hasSuccessor: false,
+    lastRecordedDaysAgo: 35,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 91,
+    activeApprentices: 0,
+    community: 'Toda Pastoralists',
+    duration: '4:50',
+    tags: ['Toda', 'Thoda Keli', 'Pastoral Hymns', 'Sacred Buffalo', 'Nilgiris'],
+    tagMetadata: {
+      theme: 'Pastoral Sacred Chants',
+      instruments: ['Acapella Guttural Chant'],
+      mood: 'Reverent & Archaic'
+    },
+    summary: 'Unwritten guttural microtonal hymns sung by Toda priest-elders inside conical dairy temples dedicated to the sacred water buffalo lineages.',
+    historicalContext: 'Intoned by Toda tribal priests at dawn outside conical stone dairies, praising sacred buffalo lineages.',
+    performerLineage: {
+      leadPerformer: 'Pillican Toda',
+      communityLineage: 'Toda Pastoralists',
+      region: 'Ooty High Plateaus, Nilgiris',
+      state: 'Tamil Nadu',
+      district: 'The Nilgiris',
+      bio: 'Elder dairy priest holding sacred oral chants for high-altitude grassland pasturage and dairy rituals.'
+    },
+    instruments: ['Acapella Guttural Chant'],
+    ritualContext: 'Sacred dairy temple consecration and seasonal buffalo migration ceremonies.',
+    motifs: ['Sacred Dairy Temple', 'Buffalo Genealogies', 'High Grassland Pastures'],
+    audioTrack: {
+      id: 'aud-toda-keli',
+      title: 'Thoda Keli Chants (Toda Pastoral Hymns)',
+      durationSeconds: 290,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Udhagamandalam, The Nilgiris',
+      waveformPeaks: [0.3, 0.45, 0.6, 0.7, 0.75, 0.7, 0.65, 0.7, 0.75, 0.6, 0.5, 0.6, 0.65, 0.6, 0.55, 0.65, 0.7, 0.6, 0.5, 0.6, 0.7, 0.6, 0.45, 0.5, 0.6, 0.5, 0.4, 0.35, 0.25, 0.2],
+      audioToneType: 'vocal_polyphony',
+      bpm: 64,
+      scaleOrRaga: 'Guttural Microtonal Drone',
+      talaOrRhythm: 'Unmeasured Breaths'
+    },
+    versesSnippet: 'பொலிவு தரும் பால் மடிகளே, முண்டுகளின் மேய்ச்சல் நிலமே வாழ்க!\n(Blessed be the bounty of the sacred dairy, long live the grassy grazing mounds!)',
+    verses: [
+      {
+        id: 'tod-v1',
+        timestamp: 0,
+        originalScript: 'பொலிவு தரும் பால் மடிகளே, முண்டுகளின் மேய்ச்சல் நிலமே வாழ்க!',
+        scriptName: 'Tamil',
+        romanTransliteration: 'Polivu tarum pāl maṭikaḷē, muṇṭukaḷiṉ mēyccal nilamē vāḻka!',
+        englishTranslation: 'Blessed be the bounty of the sacred dairy, long live the grassy grazing mounds!',
+        culturalNote: 'Chanted in deep guttural tones preserving archaic Dravidian phonemes found nowhere else in South Asia.'
+      }
+    ],
+    relatedIds: ['trad-kurumba-honey', 'grama-thalaattu-lullaby'],
+    featured: false
+  },
+  {
+    id: 'trad-kaani-chants',
+    title: 'Kaani Tribal Kaanikkarar Chants',
+    vernacularTitle: 'காணி பழங்குடி மருத்துவ வாய்மொழிப் பாடல்',
+    scriptLabel: 'Tamil Script',
+    region: 'Agasthyamalai Hills, Tirunelveli',
+    state: 'Tamil Nadu',
+    dialect: 'Malampandarish-Kaani Tamil',
+    languageFamily: 'Dravidian',
+    category: 'Ethnobotanical Healing Chants',
+    culturalZone: 'Agasthyamalai & Southern Ghats',
+    practitionerAge: 83,
+    livingPractitionerCount: 1,
+    hasSuccessor: false,
+    lastRecordedDaysAgo: 20,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 94,
+    activeApprentices: 0,
+    community: 'Kaani Tribe',
+    duration: '3:30',
+    tags: ['Kaani Tribe', 'Healing Chants', 'Agasthyamalai', 'Kokkarai', 'Ethnobotany'],
+    tagMetadata: {
+      theme: 'Ethnobotanical Healing Chants',
+      instruments: ['Kokkarai (Notched Iron Scraper Tube)'],
+      mood: 'Incantatory & Healing'
+    },
+    summary: 'Ethnobotanical oral chants intoned with the scraping of the Kokkarai instrument, encoding secret botanical remedies (including Arogyapacha) and medicinal plants.',
+    historicalContext: 'Transmitted orally among Kaani tribal healers of Agasthyamalai, using the rhythmic grating of the iron Kokkarai tube to recall combinations of medicinal forest flora.',
+    performerLineage: {
+      leadPerformer: 'Mallan Kaani',
+      communityLineage: 'Kaani Tribe',
+      region: 'Agasthyamalai Hills, Tirunelveli',
+      state: 'Tamil Nadu',
+      district: 'Tirunelveli',
+      bio: 'Eighty-three-year-old traditional healer and custodian of the sacred Kokkarai healing songs.'
+    },
+    instruments: ['Kokkarai (Notched Iron Scraper Tube)'],
+    ritualContext: 'Forest healing rites, herbal gathering journeys, and monsoon purification ceremonies.',
+    motifs: ['Healing Forest Herbs', 'Kokkarai Iron Resonance', 'Agasthya Mountain Medicine'],
+    audioTrack: {
+      id: 'aud-kaani-chants',
+      title: 'Kaani Tribal Kaanikkarar Chants',
+      durationSeconds: 210,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Papanasam Hills, Tamil Nadu',
+      waveformPeaks: [0.35, 0.6, 0.8, 0.85, 0.9, 0.8, 0.85, 0.9, 0.8, 0.7, 0.85, 0.9, 0.8, 0.85, 0.9, 0.8, 0.7, 0.85, 0.9, 0.75, 0.6, 0.8, 0.85, 0.7, 0.55, 0.75, 0.8, 0.65, 0.45, 0.3],
+      audioToneType: 'percussive_chant',
+      bpm: 110,
+      scaleOrRaga: 'Indigenous Scraping Chant',
+      talaOrRhythm: 'Kokkarai Syncopated Scrape'
+    },
+    versesSnippet: 'மலையடிவாரத்து பச்சிலையே, நோய்களை விரட்டும் மூலிகையே வா!\n(O healing leaf of the Agasthya hills, herb that banishes affliction, reveal thy cure!)',
+    verses: [
+      {
+        id: 'kaa-v1',
+        timestamp: 0,
+        originalScript: 'மலையடிவாரத்து பச்சிலையே, நோய்களை விரட்டும் மூலிகையே வா!',
+        scriptName: 'Tamil',
+        romanTransliteration: 'Malaiyaṭivārattu paccilaiyē, nōykaḷai viraṭṭum mūlikaiyē vā!',
+        englishTranslation: 'O healing leaf of the Agasthya hills, herb that banishes affliction, reveal thy cure!',
+        culturalNote: 'Chanted while searching for medicinal plants such as the stamina-boosting Arogyapacha herb.'
+      }
+    ],
+    relatedIds: ['kaniyan-koothu-thiruvarul', 'trad-kurumba-honey'],
+    featured: false
+  },
+  {
+    id: 'trad-pandavani',
+    title: 'Pandavani — Mahabharata Oral Ballad',
+    vernacularTitle: 'पंडवानी — महाभारत मौखिक गाथा',
+    scriptLabel: 'Devanagari Script',
+    region: 'Bhilai & Durg',
+    state: 'Chhattisgarh',
+    dialect: 'Chhattisgarhi',
+    languageFamily: 'Indo-Aryan',
+    category: 'Heroic Epic Recitation',
+    culturalZone: 'Central Plains & Chota Nagpur',
+    practitionerAge: 72,
+    livingPractitionerCount: 3,
+    hasSuccessor: true,
+    lastRecordedDaysAgo: 65,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 71,
+    activeApprentices: 1,
+    community: 'Pardhi & Gond Storytellers',
+    duration: '5:20',
+    tags: ['Pandavani', 'Mahabharata', 'Chhattisgarhi', 'Tambura', 'Heroic Ballad'],
+    tagMetadata: {
+      theme: 'Heroic Epic Recitation',
+      instruments: ['Tambura (with small bells)', 'Kartal'],
+      mood: 'Fiery & Theatrical'
+    },
+    summary: 'High-energy solo narration of the Mahabharata where the singer uses the single-string Tambura as a spear, bow, or mace while pacing and vocalizing battle cries.',
+    historicalContext: 'Sung by Pardhi and Gond oral storytellers of Chhattisgarh, brandishing the Tambura like Bhima’s mace.',
+    performerLineage: {
+      leadPerformer: 'Devdas Banjare Lineage Singer',
+      communityLineage: 'Pardhi & Gond Storytellers',
+      region: 'Bhilai & Durg',
+      state: 'Chhattisgarh',
+      district: 'Durg',
+      bio: 'Master storyteller following the fiery Kapalik style of Chhattisgarhi Pandavani epic narration.'
+    },
+    instruments: ['Tambura (with small bells)', 'Kartal'],
+    ritualContext: 'Community harvest celebrations and night-long rural village gatherings.',
+    motifs: ['Bhima’s Mace Tempest', 'Tambura as Weapon', 'Kurukshetra Clamor'],
+    audioTrack: {
+      id: 'aud-pandavani',
+      title: 'Pandavani — Mahabharata Oral Ballad',
+      durationSeconds: 320,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Bhilai, Chhattisgarh',
+      waveformPeaks: [0.45, 0.75, 0.92, 0.95, 0.98, 0.85, 0.9, 0.95, 0.85, 0.7, 0.9, 0.95, 0.85, 0.9, 0.95, 0.88, 0.75, 0.9, 0.95, 0.8, 0.65, 0.85, 0.9, 0.75, 0.6, 0.8, 0.9, 0.7, 0.5, 0.35],
+      audioToneType: 'plucked_lute',
+      bpm: 128,
+      scaleOrRaga: 'Chhattisgarhi Folk Epic Scale',
+      talaOrRhythm: 'Kartal Fast 4-count Strike'
+    },
+    versesSnippet: 'भीम गदा भांजत हे गा, कुरुक्षेत्र के मैदान म महासंग्राम मच गे!\n(Bhima swings his mighty mace; a great tempest descends upon Kurukshetra!)',
+    verses: [
+      {
+        id: 'pan-v1',
+        timestamp: 0,
+        originalScript: 'भीम गदा भांजत हे गा, कुरुक्षेत्र के मैदान म महासंग्राम मच गे!',
+        scriptName: 'Devanagari',
+        romanTransliteration: 'Bhīm gadā bhāñjat hē gā, Kurukṣētra kē maidān ma mahāsaṅgrām mac gē!',
+        englishTranslation: 'Bhima swings his mighty mace; a great tempest descends upon Kurukshetra!',
+        culturalNote: 'During this verse, the bard elevates the Tambura horizontally to emulate the whistling motion of Bhima’s battle mace.'
+      }
+    ],
+    relatedIds: ['pabuji-ki-phad-rajasthan', 'trad-daskathia'],
+    featured: true
+  },
+  {
+    id: 'trad-daskathia',
+    title: 'Daskathia Oral Ballad',
+    vernacularTitle: 'ଦଶକାଠିଆ ମୌଖିକ ଗୀତିକା',
+    scriptLabel: 'Odia Script',
+    region: 'Ganjam District',
+    state: 'Odisha',
+    dialect: 'Ganjam Odia',
+    languageFamily: 'Indo-Aryan',
+    category: 'Dramatic Ballad Recitation',
+    culturalZone: 'Kalinga Coast & Eastern Ghats',
+    practitionerAge: 74,
+    livingPractitionerCount: 2,
+    hasSuccessor: true,
+    lastRecordedDaysAgo: 55,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 77,
+    activeApprentices: 1,
+    community: 'Gayaka & Palia Duos',
+    duration: '4:40',
+    tags: ['Daskathia', 'Ganjam', 'Kathi Clappers', 'Odia Ballad', 'Duet Storytelling'],
+    tagMetadata: {
+      theme: 'Dramatic Ballad Recitation',
+      instruments: ['Kathi (Twin wooden clappers)', 'Ramadurgi'],
+      mood: 'Witty & Devotional'
+    },
+    summary: 'Duet oral performance where the primary singer (Gayaka) and chorus-jester (Palia) click wooden sticks at rapid speeds to narrate mythological and satirical stories.',
+    historicalContext: 'Performed across southern Odisha by a two-member team using paired resonant Kathi wood clappers held between the fingers.',
+    performerLineage: {
+      leadPerformer: 'Bichitrananda Rout',
+      communityLineage: 'Gayaka & Palia Duos',
+      region: 'Ganjam District',
+      state: 'Odisha',
+      district: 'Ganjam',
+      bio: 'Master Gayaka renowned for his rapid-fire Kathi clapping cadence and lyrical improvisation.'
+    },
+    instruments: ['Kathi (Twin wooden clappers)', 'Ramadurgi'],
+    ritualContext: 'Village temple courtyards, Shiva shrines, and rural open-air fairs.',
+    motifs: ['Kathi Clapper Rhythms', 'Gayaka and Palia Wit', 'Mythological Satire'],
+    audioTrack: {
+      id: 'aud-daskathia',
+      title: 'Daskathia Oral Ballad',
+      durationSeconds: 280,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Berhampur, Ganjam, Odisha',
+      waveformPeaks: [0.35, 0.65, 0.85, 0.9, 0.95, 0.8, 0.85, 0.9, 0.85, 0.7, 0.88, 0.92, 0.8, 0.85, 0.9, 0.85, 0.7, 0.85, 0.9, 0.75, 0.6, 0.8, 0.88, 0.7, 0.55, 0.75, 0.85, 0.65, 0.45, 0.3],
+      audioToneType: 'percussive_chant',
+      bpm: 132,
+      scaleOrRaga: 'Odisi Folk Cadence',
+      talaOrRhythm: 'Kathi Rapid Wood Clapping'
+    },
+    versesSnippet: 'କାଠି ବାଜେ ଠଣ ଠଣ, ରାମ ନାମ ଗାଅ ହେ ଜନଗଣ!\n(The wooden sticks ring with sharp clatter; sing out the name of the Divine, O people!)',
+    verses: [
+      {
+        id: 'das-v1',
+        timestamp: 0,
+        originalScript: 'କାଠି ବାଜେ ଠଣ ଠଣ, ରାମ ନାମ ଗାଅ ହେ ଜନଗଣ!',
+        scriptName: 'Odia',
+        romanTransliteration: 'Kāṭhi bājē ṭhaṇa ṭhaṇa, Rāma nāma gāa hē janagaṇa!',
+        englishTranslation: 'The wooden sticks ring with sharp clatter; sing out the name of the Divine, O people!',
+        culturalNote: 'The clatter of the two wooden Kathi pieces is sustained continuously without stopping throughout the recital.'
+      }
+    ],
+    relatedIds: ['trad-pandavani', 'baul-gaan-moner-manush'],
+    featured: true
+  }
+];
+
+export const SEEDED_ENTRIES: TraditionEntry[] = SEEDED_TRADITIONS.map((t) => ({
+  id: t.id,
+  title: t.title,
+  region: t.region,
+  dialect: t.dialect,
+  practitionerAge: t.practitionerAge,
+  livingPractitionerCount: t.livingPractitionerCount,
+  hasSuccessor: t.hasSuccessor,
+  lastRecordedDaysAgo: t.lastRecordedDaysAgo,
+  tags: t.tagMetadata,
+  summary: t.summary,
+  relatedIds: t.relatedIds
+}));
+
 class TraditionsRepository {
-  private traditions: Tradition[] = [...TRADITIONS];
-  private entries: TraditionEntry[] = [...TRADITION_ENTRIES];
+  private traditions: Tradition[] = [...SEEDED_TRADITIONS];
+  private entries: TraditionEntry[] = [...SEEDED_ENTRIES];
   private culturalZones: CulturalZone[] = [...CULTURAL_ZONES];
   private exhibitions: Exhibition[] = [...CURATED_EXHIBITIONS];
-  private stats: PreservationStats = { ...PRESERVATION_STATS };
+  private stats: PreservationStats = {
+    ...PRESERVATION_STATS,
+    totalTraditions: SEEDED_TRADITIONS.length,
+    totalDialects: 13,
+    endangeredDocumented: 12
+  };
   private annotations: CommunityAnnotation[] = [];
   private fieldRecordingsQueue: FieldRecordingSubmission[] = [];
 
-  // Helper simulating realistic async response
+  constructor() {
+    const custom = this.loadCustomTraditions();
+    if (custom.length > 0) {
+      const existingIds = new Set(this.traditions.map((t) => t.id));
+      for (const item of custom) {
+        if (!existingIds.has(item.id)) {
+          this.traditions.push(item);
+          existingIds.add(item.id);
+        }
+      }
+    }
+  }
+
+  private loadCustomTraditions(): Tradition[] {
+    if (typeof window === 'undefined' || !window.localStorage) return [];
+    try {
+      const stored = localStorage.getItem('kalantar_custom_traditions');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // ignore
+    }
+    return [];
+  }
+
+  private saveCustomTradition(tradition: Tradition) {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    try {
+      const existing = this.loadCustomTraditions();
+      const idx = existing.findIndex((t) => t.id === tradition.id);
+      if (idx >= 0) {
+        existing[idx] = tradition;
+      } else {
+        existing.push(tradition);
+      }
+      localStorage.setItem('kalantar_custom_traditions', JSON.stringify(existing));
+    } catch {
+      // ignore
+    }
+  }
+
   private async delay<T>(data: T, ms: number = 20): Promise<T> {
     return new Promise((resolve) => setTimeout(() => resolve(data), ms));
   }
@@ -243,7 +784,7 @@ class TraditionsRepository {
       
       return {
         id: t.id,
-        label: t.title.split(' (')[0],
+        label: t.title.split(' (')[0].split(' — ')[0],
         type: 'tradition',
         traditionId: t.id,
         description: `Endangerment Score: ${score}/100 (${level}) • ${t.dialect}, ${t.region}`,
@@ -310,42 +851,81 @@ class TraditionsRepository {
    * Save a field recording to the offline-first in-memory sync queue
    */
   public async submitFieldRecording(recording: FieldRecordingSubmission): Promise<{ success: boolean; message: string; id: string }> {
+    const id = recording.id || `rec-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const entry: FieldRecordingSubmission = {
       ...recording,
-      id: recording.id || `rec-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id,
       createdAt: recording.createdAt || new Date().toISOString(),
       status: 'queued_offline'
     };
     this.fieldRecordingsQueue.push(entry);
+
+    const tradition: Tradition = {
+      id,
+      title: recording.traditionTitle || 'Untitled Field Lore',
+      vernacularTitle: recording.traditionTitle || 'Untitled Field Lore',
+      scriptLabel: recording.dialect || 'Unspecified',
+      region: recording.region || 'Field Location',
+      state: recording.region || 'Field Location',
+      dialect: recording.dialect || 'Field Dialect',
+      languageFamily: 'Dravidian',
+      category: 'Heroic Ballad',
+      culturalZone: recording.region || 'Field Recording',
+      practitionerAge: recording.approximateAge || 65,
+      livingPractitionerCount: 1,
+      hasSuccessor: recording.hasSuccessor,
+      lastRecordedDaysAgo: 0,
+      vulnerabilityStatus: 'endangered',
+      tags: ['field-recording', recording.dialect, recording.region].filter(Boolean),
+      tagMetadata: {
+        theme: 'Field Documentation',
+        instruments: [],
+        mood: 'Documentary'
+      },
+      summary: recording.notes || `Field recording of ${recording.traditionTitle} by ${recording.leadPerformer}.`,
+      historicalContext: 'Captured via Kalantar field recording submission.',
+      performerLineage: {
+        leadPerformer: recording.leadPerformer,
+        communityLineage: recording.communityLineage || 'Field Community',
+        region: recording.region || 'Unknown',
+        state: recording.region || 'Unknown',
+        district: recording.region || 'Unknown',
+        bio: `Recorded in ${recording.region}.`
+      },
+      instruments: [],
+      ritualContext: 'Oral Field Lore',
+      motifs: [],
+      relatedIds: [],
+      audioTrack: {
+        id: `audio-${id}`,
+        title: recording.traditionTitle || 'Field Recording',
+        durationSeconds: recording.durationSeconds || 180,
+        sampleRateKhz: 44.1,
+        recordingYear: new Date().getFullYear(),
+        fieldRecordist: 'Field Volunteer',
+        recordingLocation: recording.region || 'Field Location',
+        waveformPeaks: Array.from({ length: 30 }, () => parseFloat((0.2 + Math.random() * 0.7).toFixed(2))),
+        audioToneType: 'vocal_polyphony',
+        bpm: 0
+      },
+      verses: []
+    };
+
+    this.traditions.push(tradition);
+    this.saveCustomTradition(tradition);
+
     return this.delay({
       success: true,
       message: 'Saved locally — will sync when connection is available',
-      id: entry.id!
+      id
     }, 150);
   }
 
-  /**
-   * Retrieve all locally queued field recordings
-   */
   public async getFieldRecordingsQueue(): Promise<FieldRecordingSubmission[]> {
     return this.delay([...this.fieldRecordingsQueue]);
   }
 
-  /**
-   * Promote an offline-captured OfflineRecording to a fully indexed Tradition entry.
-   * Calculates endangerment score from the practitioner's age and successor status,
-   * constructs a synthetic Tradition object, and appends it to the live traditions array
-   * so it is immediately searchable in the Search Portal.
-   *
-   * Endangerment score weights (simplified field formula):
-   *   - Practitioner age >= 75 → +40 pts
-   *   - Practitioner age >= 60 → +25 pts
-   *   - Practitioner age < 60  → +10 pts
-   *   - No successor            → +35 pts | Has successor → +5 pts
-   *   - Base recency weight     → +15 pts (freshly recorded, so medium urgency baseline)
-   */
   public async submitFieldRecordingFromOffline(recording: OfflineRecording): Promise<Tradition> {
-    // --- Endangerment score (simplified field formula) ---
     const ageScore =
       recording.practitionerAge >= 75 ? 40
       : recording.practitionerAge >= 60 ? 25
@@ -422,12 +1002,53 @@ class TraditionsRepository {
     };
 
     this.traditions.push(tradition);
-    this.stats.totalTraditions += 1;
+    this.saveCustomTradition(tradition);
+
+    this.stats.totalTraditions = this.traditions.length;
     if (vulnerabilityStatus === 'critical' || vulnerabilityStatus === 'endangered') {
       this.stats.endangeredDocumented += 1;
     }
 
     return this.delay(tradition, 120);
+  }
+
+  public async deleteTradition(id: string): Promise<boolean> {
+    this.traditions = this.traditions.filter((t) => t.id !== id);
+    this.entries = this.entries.filter((e) => e.id !== id);
+    this.stats.totalTraditions = this.traditions.length;
+
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const stored = this.loadCustomTraditions().filter((t) => t.id !== id);
+        localStorage.setItem('kalantar_custom_traditions', JSON.stringify(stored));
+      } catch {}
+    }
+
+    return this.delay(true, 50);
+  }
+
+  public async updateTradition(id: string, updates: Partial<Tradition>): Promise<Tradition | null> {
+    const idx = this.traditions.findIndex((t) => t.id === id);
+    if (idx === -1) return null;
+
+    this.traditions[idx] = {
+      ...this.traditions[idx],
+      ...updates,
+      ...(updates.region ? { state: updates.region } : {})
+    };
+
+    const entryIdx = this.entries.findIndex((e) => e.id === id);
+    if (entryIdx !== -1) {
+      this.entries[entryIdx] = {
+        ...this.entries[entryIdx],
+        ...(updates.title ? { title: updates.title } : {}),
+        ...(updates.region ? { region: updates.region } : {}),
+        ...(updates.dialect ? { dialect: updates.dialect } : {})
+      };
+    }
+
+    this.saveCustomTradition(this.traditions[idx]);
+    return this.delay(this.traditions[idx], 50);
   }
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './AboutModal.module.css';
 import { CloseIcon, ShieldCheckIcon } from '../common/Icons';
 
@@ -32,11 +32,85 @@ const BENCHMARKS = [
 ] as const;
 
 export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  // Remember what had focus before the modal opened so we can restore it
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  // ── Focus management ──────────────────────────────────────────────────────
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    // Move focus into modal on open
+    closeBtnRef.current?.focus();
+
+    return () => {
+      // Restore focus to the triggering element on close
+      previousFocusRef.current?.focus();
+    };
+  }, []);
+
+  // ── Keyboard handling — Escape + Tab trap ─────────────────────────────────
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      if (e.key !== 'Tab') return;
+
+      const modal = modalRef.current;
+      if (!modal) return;
+
+      const focusable = Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !el.closest('[aria-hidden="true"]'));
+
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {/* Close button */}
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Close About modal">
+    // Overlay — click outside to close; aria-hidden so screen readers skip it
+    <div className={styles.overlay} onClick={onClose} aria-hidden="true">
+      {/* Dialog — stop propagation; full ARIA dialog semantics */}
+      <div
+        ref={modalRef}
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="about-modal-title"
+        onClick={(e) => e.stopPropagation()}
+        // Remove aria-hidden from the dialog itself
+        aria-hidden={undefined}
+      >
+        {/* Close button — receives initial focus */}
+        <button
+          ref={closeBtnRef}
+          className={styles.closeBtn}
+          onClick={onClose}
+          aria-label="Close About modal"
+        >
           <CloseIcon size={17} />
         </button>
 
@@ -45,7 +119,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
           <div className={styles.emblemLarge}>
             <span className={styles.emblemChar}>க</span>
           </div>
-          <h2 className={styles.heroTitle}>KALANTAR</h2>
+          <h2 id="about-modal-title" className={styles.heroTitle}>KALANTAR</h2>
           <span className={styles.heroVernacular}>காலாந்தர் · कालांतर · ಕಾಲಾಂತರ</span>
           <p className={styles.heroTagline}>
             "Across Time" — National Digital Archive for India's Endangered Oral Traditions

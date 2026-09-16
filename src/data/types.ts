@@ -4,12 +4,19 @@ export type VulnerabilityStatus = 'critical' | 'endangered' | 'vulnerable' | 'th
 
 export type TraditionCategory = 
   | 'Heroic Ballad' 
+  | 'Heroic Ballad & Bow-Song'
+  | 'Elegiac Oral Verse'
+  | 'Ritual Trance Invocations'
+  | 'Agrarian Domestic Lore'
+  | 'Heroic Epic & Scroll Ballad'
+  | 'Mystic Oral Philosophy'
   | 'Temple & Ritual Chant' 
   | 'Pilgrim & Devotional Lore' 
   | 'Dance & Martial Ballad' 
   | 'Matriarchal Life-Cycle Song' 
   | 'Pastoral & Agro Lore' 
-  | 'Satirical Narrative';
+  | 'Satirical Narrative'
+  | string;
 
 export interface VerseLyric {
   id: string;
@@ -71,6 +78,11 @@ export interface Tradition {
   hasSuccessor: boolean;
   lastRecordedDaysAgo: number;
   vulnerabilityStatus: VulnerabilityStatus;
+  endangermentScore?: number;
+  activeApprentices?: number;
+  community?: string;
+  duration?: string;
+  versesSnippet?: string;
 
   tags: string[];
   tagMetadata: TraditionTags;

@@ -36,17 +36,14 @@ export interface EndangermentScoreInput {
   practitionerAge: number;
   lastRecordedDaysAgo: number;
   livingPractitionerCount: number;
+  endangermentScore?: number;
 }
 
-/**
- * Calculates the composite endangerment score (0 - 100) for a given oral tradition entry.
- * 
- * @param entry The oral tradition entry to evaluate (Tradition or TraditionEntry)
- * @returns An integer score between 0 and 100
- */
 export function calculateEndangermentScore(entry: EndangermentScoreInput): number {
-  // 1. Successor Component (35% weight)
-  // If no apprentice is learning the tradition, full penalty of 35 is assigned.
+  if (typeof entry.endangermentScore === 'number') {
+    return entry.endangermentScore;
+  }
+
   const successorPoints = entry.hasSuccessor ? 0 : 35;
 
   // 2. Practitioner Age Component (30% weight)
