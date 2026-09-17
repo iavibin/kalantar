@@ -4,7 +4,8 @@ import { Hero } from '../components/Hero/Hero';
 import { SearchPortal } from '../components/Search/SearchPortal';
 import { AudioPlayer } from '../components/AudioPlayer/AudioPlayer';
 import { KnowledgeGraph } from '../components/KnowledgeGraph/KnowledgeGraph';
-import { Exhibitions } from '../components/Exhibitions/Exhibitions';
+import { CulturalAtlas } from '../components/CulturalAtlas/CulturalAtlas';
+import { Gallery } from '../components/Gallery/Gallery';
 import { TraditionModal } from '../components/TraditionModal/TraditionModal';
 import { ContributeModal } from '../components/ContributeModal/ContributeModal';
 import { FieldRecorder } from '../components/FieldRecorder/FieldRecorder';
@@ -211,11 +212,19 @@ export const Portal: React.FC = () => {
           />
         )}
 
-        {activeTab === 'exhibitions' && (
-          <Exhibitions
-            exhibitions={exhibitions}
+        {activeTab === 'map' && (
+          <CulturalAtlas
             traditions={traditions}
-            onPlayTradition={handlePlayToggle}
+            onOpenDossier={handleOpenDossier}
+            onOpenGraphNode={handleOpenGraphNode}
+          />
+        )}
+
+        {activeTab === 'gallery' && (
+          <Gallery
+            traditions={traditions}
+            onOpenDossier={handleOpenDossier}
+            onOpenGraphNode={handleOpenGraphNode}
           />
         )}
 

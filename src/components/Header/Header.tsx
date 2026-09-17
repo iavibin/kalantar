@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './Header.module.css';
-import { SearchIcon, GraphIcon, SparklesIcon, MicIcon, ShieldCheckIcon } from '../common/Icons';
+import { SearchIcon, GraphIcon, MapIcon, ImageIcon, MicIcon, ShieldCheckIcon } from '../common/Icons';
 import { useAuth } from '../../context/AuthContext';
 
-export type ActiveTab = 'search' | 'graph' | 'exhibitions' | 'recorder';
+export type ActiveTab = 'search' | 'graph' | 'map' | 'gallery' | 'recorder';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -54,12 +54,20 @@ export const Header: React.FC<HeaderProps> = ({
             <span>Knowledge Graph</span>
           </button>
           <button
-            className={`${styles.tabBtn} ${activeTab === 'exhibitions' ? styles.tabBtnActive : ''}`}
-            onClick={() => onTabChange('exhibitions')}
-            id="nav-tab-soundscapes"
+            className={`${styles.tabBtn} ${activeTab === 'map' ? styles.tabBtnActive : ''}`}
+            onClick={() => onTabChange('map')}
+            id="nav-tab-map"
           >
-            <SparklesIcon size={15} />
-            <span>Soundscapes</span>
+            <MapIcon size={15} />
+            <span>Cultural Map</span>
+          </button>
+          <button
+            className={`${styles.tabBtn} ${activeTab === 'gallery' ? styles.tabBtnActive : ''}`}
+            onClick={() => onTabChange('gallery')}
+            id="nav-tab-gallery"
+          >
+            <ImageIcon size={15} />
+            <span>Gallery</span>
           </button>
           <button
             className={`${styles.tabBtn} ${styles.tabBtnRecorder} ${activeTab === 'recorder' ? styles.tabBtnActive : ''}`}
