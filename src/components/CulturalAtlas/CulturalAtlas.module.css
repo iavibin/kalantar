@@ -433,6 +433,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  font-family: inherit;
   padding: 9px 12px;
   border-radius: var(--radius-md);
   background: var(--bg-surface-2);

@@ -27,14 +27,6 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
     traditionsWithCoords[0]?.id || ''
   );
 
-  const activeTradition = useMemo(() => {
-    return (
-      traditionsWithCoords.find((t) => t.id === activeTraditionId) ||
-      traditionsWithCoords[0] ||
-      null
-    );
-  }, [traditionsWithCoords, activeTraditionId]);
-
   // Map coordinate boundaries
   const bounds = useMemo(() => {
     if (viewMode === 'south') {
@@ -60,6 +52,30 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
       padY: 55
     };
   }, [viewMode]);
+
+  // Filter traditions against the active bounds before projecting or rendering markers
+  const visibleTraditions = useMemo(() => {
+    return traditionsWithCoords.filter((t) => {
+      const { lat, lng } = t.coordinates!;
+      return (
+        lat >= bounds.minLat &&
+        lat <= bounds.maxLat &&
+        lng >= bounds.minLng &&
+        lng <= bounds.maxLng
+      );
+    });
+  }, [traditionsWithCoords, bounds]);
+
+  const activeTradition = useMemo(() => {
+    const foundInVisible = visibleTraditions.find((t) => t.id === activeTraditionId);
+    if (foundInVisible) return foundInVisible;
+    return (
+      visibleTraditions[0] ||
+      traditionsWithCoords.find((t) => t.id === activeTraditionId) ||
+      traditionsWithCoords[0] ||
+      null
+    );
+  }, [visibleTraditions, traditionsWithCoords, activeTraditionId]);
 
   // Linear projection from (lat, lng) to SVG (x, y)
   const projectCoords = (lat: number, lng: number) => {
@@ -276,8 +292,8 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
                 </g>
               )}
 
-              {/* Map Pins for Traditions */}
-              {traditionsWithCoords.map((tradition) => {
+              {/* Map Pins for Traditions within active bounds */}
+              {visibleTraditions.map((tradition) => {
                 const { lat, lng } = tradition.coordinates!;
                 const { x, y } = projectCoords(lat, lng);
                 const isSelected = activeTradition?.id === tradition.id;
@@ -289,6 +305,12 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
                     className={`${styles.pinGroup} ${isSelected ? styles.pinGroupActive : ''}`}
                     style={{ '--pin-color': pinColor } as React.CSSProperties}
                     onClick={() => setActiveTraditionId(tradition.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        if (e.key === ' ') e.preventDefault();
+                        setActiveTraditionId(tradition.id);
+                      }
+                    }}
                     role="button"
                     tabIndex={0}
                     aria-label={`${tradition.title} marker at ${tradition.region}`}
@@ -468,8 +490,9 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
               {traditionsWithCoords.map((t) => {
                 const isSelected = activeTradition?.id === t.id;
                 return (
-                  <div
+                  <button
                     key={t.id}
+                    type="button"
                     className={`${styles.listItem} ${isSelected ? styles.listItemActive : ''}`}
                     onClick={() => setActiveTraditionId(t.id)}
                   >
@@ -487,7 +510,7 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
                         background: getEndangermentColor(t)
                       }}
                     />
-                  </div>
+                  </button>
                 );
               })}
             </div>
