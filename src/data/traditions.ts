@@ -10,6 +10,7 @@ export const TRADITIONS: Tradition[] = [
     scriptLabel: 'Tamil Script',
     region: 'Tirunelveli & Tenkasi',
     state: 'Tamil Nadu',
+    coordinates: { lat: 8.96, lng: 77.31 },
     dialect: 'Southern Tirunelveli Tamil',
     languageFamily: 'Dravidian',
     category: 'Heroic Ballad & Bow-Song',
@@ -79,7 +80,25 @@ export const TRADITIONS: Tradition[] = [
       }
     ],
     relatedIds: ['kaniyan-koothu-thiruvarul', 'pabuji-ki-phad-rajasthan'],
-    featured: true
+    featured: true,
+    // NOTE: Placeholder mediaGallery entries pending real archival field uploads
+    mediaGallery: [
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80',
+        caption: 'Master Muthukumarasamy Pulavar striking the resonant Villu bowstring with bronze bells'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',
+        caption: 'Udukku and Kudam earthen pot percussive accompaniment during the midnight recital'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=80',
+        caption: 'Village Kodai festival gathering listening to the heroic ballads of Muthupattan'
+      }
+    ]
   },
 
   // 2. Tamil Nadu - Marudha Nilam Oppari
@@ -90,6 +109,7 @@ export const TRADITIONS: Tradition[] = [
     scriptLabel: 'Tamil Script',
     region: 'Madurai & Dindigul Rural Belts',
     state: 'Tamil Nadu',
+    coordinates: { lat: 9.92, lng: 78.12 },
     dialect: 'Kongu Tamil',
     languageFamily: 'Dravidian',
     category: 'Elegiac Oral Verse',
@@ -161,6 +181,7 @@ export const TRADITIONS: Tradition[] = [
     scriptLabel: 'Tamil Script',
     region: 'Tirunelveli & Kanniyakumari',
     state: 'Tamil Nadu',
+    coordinates: { lat: 8.18, lng: 77.54 },
     dialect: 'Nanjil Nadu Tamil',
     languageFamily: 'Dravidian',
     category: 'Ritual Trance Invocations',
@@ -221,7 +242,25 @@ export const TRADITIONS: Tradition[] = [
       }
     ],
     relatedIds: ['villu-pattu-muthupattan', 'marudha-nilam-oppari'],
-    featured: true
+    featured: true,
+    // NOTE: Placeholder mediaGallery entries pending real archival field uploads
+    mediaGallery: [
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+        caption: 'Kaniyan chanter adorned in ritual silken attire invoking Sudalai Madan'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+        caption: 'Twin Magudam frame drums struck in ecstatic polyrhythms through the night'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',
+        caption: 'Sacred embers and trance invocation circle at the village guardian shrine'
+      }
+    ]
   },
 
   // 4. Tamil Nadu - Grama Thalaattu
@@ -232,6 +271,7 @@ export const TRADITIONS: Tradition[] = [
     scriptLabel: 'Tamil Script',
     region: 'Thanjavur & Tiruvarur',
     state: 'Tamil Nadu',
+    coordinates: { lat: 10.78, lng: 79.13 },
     dialect: 'Cauvery Delta Tamil',
     languageFamily: 'Dravidian',
     category: 'Agrarian Domestic Lore',
@@ -303,6 +343,7 @@ export const TRADITIONS: Tradition[] = [
     scriptLabel: 'Devanagari Script',
     region: 'Thar Desert (Jodhpur & Nagaur)',
     state: 'Rajasthan',
+    coordinates: { lat: 26.29, lng: 73.02 },
     dialect: 'Marwari',
     languageFamily: 'Indo-Aryan',
     category: 'Heroic Epic & Scroll Ballad',
@@ -363,7 +404,25 @@ export const TRADITIONS: Tradition[] = [
       }
     ],
     relatedIds: ['villu-pattu-muthupattan', 'baul-gaan-moner-manush'],
-    featured: true
+    featured: true,
+    // NOTE: Placeholder mediaGallery entries pending real archival field uploads
+    mediaGallery: [
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=800&q=80',
+        caption: 'Thirty-foot hand-painted Phad scroll chronicling the chivalric lore of Pabuji'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80',
+        caption: 'Chogaram Bhopa drawing the curved horsehair bow across the Ravanahatha spike fiddle'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1528728329032-2972f65dfb3f?auto=format&fit=crop&w=800&q=80',
+        caption: 'Lantern-illuminated all-night desert recitation for pastoral camel herds'
+      }
+    ]
   },
 
   // 6. West Bengal - Baul Gaan
@@ -374,6 +433,7 @@ export const TRADITIONS: Tradition[] = [
     scriptLabel: 'Bengali Script',
     region: 'Birbhum & Nadia',
     state: 'West Bengal',
+    coordinates: { lat: 23.63, lng: 87.42 },
     dialect: 'Rarh Bengali',
     languageFamily: 'Indo-Aryan',
     category: 'Mystic Oral Philosophy',
@@ -434,7 +494,25 @@ export const TRADITIONS: Tradition[] = [
       }
     ],
     relatedIds: ['pabuji-ki-phad-rajasthan', 'grama-thalaattu-lullaby'],
-    featured: true
+    featured: true,
+    // NOTE: Placeholder mediaGallery entries pending real archival field uploads
+    mediaGallery: [
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=80',
+        caption: 'Baul bard Gour Das Baul chanting the mystic verses of Lalon Fakir with Ektara'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
+        caption: 'Kenduli Baul Mela gathering along the banks of the sacred Ajay river'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+        caption: 'Esoteric acoustic recital under the banyan tree at the rural akhara'
+      }
+    ]
   }
 ];
 

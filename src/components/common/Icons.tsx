@@ -185,3 +185,19 @@ export const TrashIcon: React.FC<IconProps> = ({ size = 16, color = 'currentColo
   </svg>
 );
 
+export const ImageIcon: React.FC<IconProps> = ({ size = 20, color = 'currentColor', className, ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <polyline points="21 15 16 10 5 21" />
+  </svg>
+);
+
+export const VideoIcon: React.FC<IconProps> = ({ size = 20, color = 'currentColor', className, ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+    <polygon points="23 7 16 12 23 17 23 7" fill={color} />
+    <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+  </svg>
+);
+
+

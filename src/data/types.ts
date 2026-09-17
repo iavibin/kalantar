@@ -98,6 +98,8 @@ export interface Tradition {
   audioTrack: AudioTrack;
   verses: VerseLyric[];
   featured?: boolean;
+  mediaGallery?: { type: 'image' | 'video'; url: string; caption?: string }[];
+  coordinates?: { lat: number; lng: number };
 }
 
 export interface TraditionEntry {
