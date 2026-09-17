@@ -159,16 +159,27 @@ export const Gallery: React.FC<GalleryProps> = ({
               >
                 <div className={styles.mediaWrapper}>
                   {!isBroken ? (
-                    <img
-                      src={url}
-                      alt={caption || tradition.title}
-                      className={styles.mediaImg}
-                      loading="lazy"
-                      onError={() => handleImageError(id)}
-                    />
+                    type === 'video' ? (
+                      <video
+                        src={url}
+                        className={styles.mediaImg}
+                        controls
+                        preload="metadata"
+                        onError={() => handleImageError(id)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    ) : (
+                      <img
+                        src={url}
+                        alt={caption || tradition.title}
+                        className={styles.mediaImg}
+                        loading="lazy"
+                        onError={() => handleImageError(id)}
+                      />
+                    )
                   ) : (
                     <div className={styles.mediaFallback}>
-                      <ImageIcon size={28} />
+                      {type === 'video' ? <VideoIcon size={28} /> : <ImageIcon size={28} />}
                       <span>Archival Visual Record</span>
                     </div>
                   )}
