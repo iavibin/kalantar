@@ -15,7 +15,7 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onOpenContribute })
         {/* Brand Info */}
         <div className={styles.brandCol}>
           <div className={styles.footerTitle}>
-            KALANTAR <span style={{ fontFamily: 'var(--font-devanagari)', fontSize: '0.9rem', color: 'var(--text-gold)' }}>காலாந்தர்</span>
+            KALANTAR <span style={{ fontFamily: 'var(--font-devanagari)', fontSize: '0.9rem', color: 'var(--text-gold)' }}>கலந்தர்</span>
           </div>
           <p className={styles.footerDesc}>
             A living, open-access national digital archive dedicated to documenting, transcribing, and safeguarding India's endangered oral traditions, epic ballads, and bardic memory.

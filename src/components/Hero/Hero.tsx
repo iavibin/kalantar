@@ -43,7 +43,7 @@ export const Hero: React.FC<HeroProps> = ({
         {/* Motto Pill */}
         <div className={styles.mottoPill}>
           <SparklesIcon size={14} color="var(--gold-400)" />
-          <span>காலாந்தர் • Preserving India's Endangered Oral Traditions</span>
+          <span>கலந்தர் • Preserving India's Endangered Oral Traditions</span>
         </div>
 
         {/* Hero Title */}

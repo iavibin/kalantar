@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className={styles.brandText}>
             <div className={styles.brandTitle}>
               KALANTAR
-              <span className={styles.vernacularBadge}>காலாந்தர்</span>
+              <span className={styles.vernacularBadge}>கலந்தர்</span>
             </div>
             <span className={styles.brandSubtitle}>National Digital Archive for India's Oral Traditions</span>
           </div>

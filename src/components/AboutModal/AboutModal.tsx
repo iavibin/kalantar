@@ -120,7 +120,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
             <span className={styles.emblemChar}>க</span>
           </div>
           <h2 id="about-modal-title" className={styles.heroTitle}>KALANTAR</h2>
-          <span className={styles.heroVernacular}>காலாந்தர் · कालांतर · ಕಾಲಾಂತರ</span>
+          <span className={styles.heroVernacular}>கலந்தர் · कालांतर · ಕಾಲಾಂತರ</span>
           <p className={styles.heroTagline}>
             "Across Time" — National Digital Archive for India's Endangered Oral Traditions
           </p>
