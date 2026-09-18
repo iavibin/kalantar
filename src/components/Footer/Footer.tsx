@@ -1,14 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Footer.module.css';
-import { ActiveTab } from '../Header/Header';
 import { ShieldCheckIcon } from '../common/Icons';
 
 interface FooterProps {
-  onTabChange: (tab: ActiveTab) => void;
   onSelectTradition: (query: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onTabChange, onSelectTradition }) => {
+export const Footer: React.FC<FooterProps> = ({ onSelectTradition }) => {
+  const navigate = useNavigate();
+
+  const handleModuleClick = (path: string) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.footerInner}`}>
@@ -30,11 +36,11 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onSelectTradition }
         <div>
           <div className={styles.colHeading}>Archive Modules</div>
           <ul className={styles.linkList}>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Orality Search Portal</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('graph')}>Thematic Knowledge Graph</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('map')}>Cultural Atlas Map</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('gallery')}>Visual Archive Gallery</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('recorder')}>Field Recorder</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/search')}>Orality Search Portal</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/graph')}>Thematic Knowledge Graph</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/map')}>Cultural Atlas Map</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/gallery')}>Visual Archive Gallery</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/recorder')}>Field Recorder</button></li>
           </ul>
         </div>
 

@@ -43,7 +43,7 @@ export const Landing: React.FC = () => {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <Link
-              to="/portal"
+              to="/portal/search"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -121,7 +121,7 @@ export const Landing: React.FC = () => {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '18px', flexWrap: 'wrap' }}>
             <Link
-              to="/portal"
+              to="/portal/search"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',

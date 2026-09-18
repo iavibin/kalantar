@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Header, ActiveTab } from '../components/Header/Header';
+import { Outlet, useNavigate, useOutletContext } from 'react-router-dom';
+import { Header } from '../components/Header/Header';
 import { Hero } from '../components/Hero/Hero';
 import { SearchPortal } from '../components/Search/SearchPortal';
 import { AudioPlayer } from '../components/AudioPlayer/AudioPlayer';
@@ -23,8 +24,39 @@ import {
 } from '../data/types';
 import { traditionsRepo } from '../data/traditionsRepo';
 
+export interface PortalContextType {
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+  filters: FacetFilterState;
+  setFilters: (f: FacetFilterState) => void;
+  traditions: Tradition[];
+  facetOptions: {
+    categories: string[];
+    culturalZones: string[];
+    dialects: string[];
+    instruments: string[];
+    motifs: string[];
+  };
+  knowledgeGraph: KnowledgeGraphData;
+  stats: PreservationStats;
+  activePlayingTradition: Tradition | null;
+  isPlaying: boolean;
+  selectedGraphTraditionId: string | null;
+  handlePlayToggle: (tradition: Tradition) => void;
+  handleSearchSubmit: () => void;
+  handleQuickChipClick: (motifOrTerm: string) => void;
+  handleOpenGraphNode: (traditionId: string) => void;
+  handleOpenDossier: (tradition: Tradition) => void;
+  handleOpenContribute: (tradition?: Tradition) => void;
+  handleResetFilters: () => void;
+  setEditingTradition: (tradition: Tradition | null) => void;
+  handleDeleteTradition: (id: string) => Promise<void>;
+}
+
+export const usePortalContext = () => useOutletContext<PortalContextType>();
+
 export const Portal: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('search');
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filters, setFilters] = useState<FacetFilterState>({
     sortBy: 'recommended'
@@ -44,7 +76,7 @@ export const Portal: React.FC = () => {
     instruments: [],
     motifs: []
   });
-  const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
+  const [, setExhibitions] = useState<Exhibition[]>([]);
   const [knowledgeGraph, setKnowledgeGraph] = useState<KnowledgeGraphData>({ nodes: [], edges: [] });
   const [stats, setStats] = useState<PreservationStats>({
     totalTraditions: 6,
@@ -115,6 +147,14 @@ export const Portal: React.FC = () => {
     }
   };
 
+  const handleSearchSubmit = () => {
+    navigate('/portal/search');
+    setTimeout(() => {
+      const el = document.getElementById('search-portal');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 60);
+  };
+
   const handleQuickChipClick = (motifOrTerm: string) => {
     if (motifOrTerm === 'Endangered Dialects') {
       setFilters({ ...filters, vulnerabilityStatus: 'critical' });
@@ -122,14 +162,16 @@ export const Portal: React.FC = () => {
     } else {
       setSearchQuery(motifOrTerm);
     }
-    setActiveTab('search');
-    const portalElement = document.getElementById('search-portal');
-    if (portalElement) portalElement.scrollIntoView({ behavior: 'smooth' });
+    navigate('/portal/search');
+    setTimeout(() => {
+      const portalElement = document.getElementById('search-portal');
+      if (portalElement) portalElement.scrollIntoView({ behavior: 'smooth' });
+    }, 60);
   };
 
   const handleOpenGraphNode = (traditionId: string) => {
     setSelectedGraphTraditionId(traditionId);
-    setActiveTab('graph');
+    navigate('/portal/graph');
     window.scrollTo({ top: 400, behavior: 'smooth' });
   };
 
@@ -142,14 +184,9 @@ export const Portal: React.FC = () => {
     setIsContributeOpen(true);
   };
 
-  const handleFooterTabChange = (tab: ActiveTab) => {
-    setActiveTab(tab);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const handleFooterSelectTradition = (traditionQuery: string) => {
     setSearchQuery(traditionQuery);
-    setActiveTab('search');
+    navigate('/portal/search');
     setTimeout(() => {
       const portalElement = document.getElementById('search-portal');
       if (portalElement) {
@@ -180,74 +217,37 @@ export const Portal: React.FC = () => {
     await refreshTraditions();
   };
 
+  const portalContext: PortalContextType = {
+    searchQuery,
+    setSearchQuery,
+    filters,
+    setFilters,
+    traditions,
+    facetOptions,
+    knowledgeGraph,
+    stats,
+    activePlayingTradition,
+    isPlaying,
+    selectedGraphTraditionId,
+    handlePlayToggle,
+    handleSearchSubmit,
+    handleQuickChipClick,
+    handleOpenGraphNode,
+    handleOpenDossier,
+    handleOpenContribute,
+    handleResetFilters,
+    setEditingTradition,
+    handleDeleteTradition
+  };
+
   return (
     <div className="portal-page">
       <Header
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
         onOpenAbout={() => setIsAboutOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
       />
 
-      {activeTab !== 'recorder' && (
-        <Hero
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onSearchSubmit={() => {
-            setActiveTab('search');
-            const el = document.getElementById('search-portal');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
-          onQuickChipClick={handleQuickChipClick}
-          stats={stats}
-        />
-      )}
-
-      <main className="container">
-        {activeTab === 'search' && (
-          <SearchPortal
-            traditions={traditions}
-            activeFilters={filters}
-            onFilterChange={setFilters}
-            onResetFilters={handleResetFilters}
-            facetOptions={facetOptions}
-            activePlayingId={isPlaying && activePlayingTradition ? activePlayingTradition.id : null}
-            onPlayToggle={handlePlayToggle}
-            onOpenDossier={handleOpenDossier}
-            onOpenGraphNode={handleOpenGraphNode}
-            onEditTradition={setEditingTradition}
-            onDeleteTradition={handleDeleteTradition}
-          />
-        )}
-
-        {activeTab === 'graph' && (
-          <KnowledgeGraph
-            graphData={knowledgeGraph}
-            traditions={traditions}
-            selectedTraditionId={selectedGraphTraditionId}
-            onPlayTradition={handlePlayToggle}
-            onOpenDossier={handleOpenDossier}
-          />
-        )}
-
-        {activeTab === 'map' && (
-          <CulturalAtlas
-            traditions={traditions}
-            onOpenDossier={handleOpenDossier}
-            onOpenGraphNode={handleOpenGraphNode}
-          />
-        )}
-
-        {activeTab === 'gallery' && (
-          <Gallery
-            traditions={traditions}
-            onOpenDossier={handleOpenDossier}
-            onOpenGraphNode={handleOpenGraphNode}
-          />
-        )}
-
-        {activeTab === 'recorder' && <FieldRecorder />}
-      </main>
+      <Outlet context={portalContext} />
 
       {activePlayingTradition && (
         <AudioPlayer
@@ -295,15 +295,127 @@ export const Portal: React.FC = () => {
       {isAuthOpen && (
         <AuthModal
           onClose={() => setIsAuthOpen(false)}
-          onVolunteerSuccess={() => setActiveTab('recorder')}
+          onVolunteerSuccess={() => navigate('/portal/recorder')}
         />
       )}
 
-      <Footer
-        onTabChange={handleFooterTabChange}
-        onSelectTradition={handleFooterSelectTradition}
-      />
+      <Footer onSelectTradition={handleFooterSelectTradition} />
     </div>
+  );
+};
+
+export const PortalSearch: React.FC = () => {
+  const {
+    searchQuery,
+    setSearchQuery,
+    handleSearchSubmit,
+    handleQuickChipClick,
+    stats,
+    traditions,
+    filters,
+    setFilters,
+    handleResetFilters,
+    facetOptions,
+    isPlaying,
+    activePlayingTradition,
+    handlePlayToggle,
+    handleOpenDossier,
+    handleOpenGraphNode,
+    setEditingTradition,
+    handleDeleteTradition
+  } = usePortalContext();
+
+  return (
+    <>
+      <Hero
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearchSubmit={handleSearchSubmit}
+        onQuickChipClick={handleQuickChipClick}
+        stats={stats}
+      />
+      <main className="container">
+        <SearchPortal
+          traditions={traditions}
+          activeFilters={filters}
+          onFilterChange={setFilters}
+          onResetFilters={handleResetFilters}
+          facetOptions={facetOptions}
+          activePlayingId={isPlaying && activePlayingTradition ? activePlayingTradition.id : null}
+          onPlayToggle={handlePlayToggle}
+          onOpenDossier={handleOpenDossier}
+          onOpenGraphNode={handleOpenGraphNode}
+          onEditTradition={setEditingTradition}
+          onDeleteTradition={handleDeleteTradition}
+        />
+      </main>
+    </>
+  );
+};
+
+export const PortalGraph: React.FC = () => {
+  const {
+    knowledgeGraph,
+    traditions,
+    selectedGraphTraditionId,
+    handlePlayToggle,
+    handleOpenDossier
+  } = usePortalContext();
+
+  return (
+    <main className="container">
+      <KnowledgeGraph
+        graphData={knowledgeGraph}
+        traditions={traditions}
+        selectedTraditionId={selectedGraphTraditionId}
+        onPlayTradition={handlePlayToggle}
+        onOpenDossier={handleOpenDossier}
+      />
+    </main>
+  );
+};
+
+export const PortalMap: React.FC = () => {
+  const {
+    traditions,
+    handleOpenDossier,
+    handleOpenGraphNode
+  } = usePortalContext();
+
+  return (
+    <main className="container">
+      <CulturalAtlas
+        traditions={traditions}
+        onOpenDossier={handleOpenDossier}
+        onOpenGraphNode={handleOpenGraphNode}
+      />
+    </main>
+  );
+};
+
+export const PortalGallery: React.FC = () => {
+  const {
+    traditions,
+    handleOpenDossier,
+    handleOpenGraphNode
+  } = usePortalContext();
+
+  return (
+    <main className="container">
+      <Gallery
+        traditions={traditions}
+        onOpenDossier={handleOpenDossier}
+        onOpenGraphNode={handleOpenGraphNode}
+      />
+    </main>
+  );
+};
+
+export const PortalRecorder: React.FC = () => {
+  return (
+    <main className="container">
+      <FieldRecorder />
+    </main>
   );
 };
 

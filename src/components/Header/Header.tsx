@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink, Link } from 'react-router-dom';
 import styles from './Header.module.css';
 import { SearchIcon, GraphIcon, MapIcon, ImageIcon, MicIcon, ShieldCheckIcon } from '../common/Icons';
 import { useAuth } from '../../context/AuthContext';
@@ -6,15 +7,11 @@ import { useAuth } from '../../context/AuthContext';
 export type ActiveTab = 'search' | 'graph' | 'map' | 'gallery' | 'recorder';
 
 interface HeaderProps {
-  activeTab: ActiveTab;
-  onTabChange: (tab: ActiveTab) => void;
   onOpenAbout: () => void;
   onOpenAuth: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  activeTab,
-  onTabChange,
   onOpenAbout,
   onOpenAuth
 }) => {
@@ -23,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className={styles.header}>
       <div className={`container ${styles.headerInner}`}>
-        <div className={styles.brandGroup} onClick={() => onTabChange('search')}>
+        <Link to="/portal/search" className={styles.brandGroup}>
           <div className={styles.emblem}>
             <span className={styles.emblemContent}>க</span>
           </div>
@@ -34,49 +31,49 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <span className={styles.brandSubtitle}>National Digital Archive for India's Oral Traditions</span>
           </div>
-        </div>
+        </Link>
 
         <nav className={styles.navTabs}>
-          <button
-            className={`${styles.tabBtn} ${activeTab === 'search' ? styles.tabBtnActive : ''}`}
-            onClick={() => onTabChange('search')}
+          <NavLink
+            to="/portal/search"
+            className={({ isActive }) => `${styles.tabBtn} ${isActive ? styles.tabBtnActive : ''}`}
             id="nav-tab-search"
           >
             <SearchIcon size={15} />
             <span>Orality Search</span>
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === 'graph' ? styles.tabBtnActive : ''}`}
-            onClick={() => onTabChange('graph')}
+          </NavLink>
+          <NavLink
+            to="/portal/graph"
+            className={({ isActive }) => `${styles.tabBtn} ${isActive ? styles.tabBtnActive : ''}`}
             id="nav-tab-graph"
           >
             <GraphIcon size={15} />
             <span>Knowledge Graph</span>
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === 'map' ? styles.tabBtnActive : ''}`}
-            onClick={() => onTabChange('map')}
+          </NavLink>
+          <NavLink
+            to="/portal/map"
+            className={({ isActive }) => `${styles.tabBtn} ${isActive ? styles.tabBtnActive : ''}`}
             id="nav-tab-map"
           >
             <MapIcon size={15} />
             <span>Cultural Map</span>
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === 'gallery' ? styles.tabBtnActive : ''}`}
-            onClick={() => onTabChange('gallery')}
+          </NavLink>
+          <NavLink
+            to="/portal/gallery"
+            className={({ isActive }) => `${styles.tabBtn} ${isActive ? styles.tabBtnActive : ''}`}
             id="nav-tab-gallery"
           >
             <ImageIcon size={15} />
             <span>Gallery</span>
-          </button>
-          <button
-            className={`${styles.tabBtn} ${styles.tabBtnRecorder} ${activeTab === 'recorder' ? styles.tabBtnActive : ''}`}
-            onClick={() => onTabChange('recorder')}
+          </NavLink>
+          <NavLink
+            to="/portal/recorder"
+            className={({ isActive }) => `${styles.tabBtn} ${styles.tabBtnRecorder} ${isActive ? styles.tabBtnActive : ''}`}
             id="nav-tab-contribute"
           >
             <MicIcon size={15} />
             <span>Contribute</span>
-          </button>
+          </NavLink>
         </nav>
 
         <div className={styles.headerActions}>

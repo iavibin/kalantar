@@ -28,6 +28,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   ...TRADITIONS,
   {
     id: 'trad-therukoothu',
+    coordinates: { lat: 12.83, lng: 79.70 },
     title: 'Therukoothu — Draupadi Amman Natakam',
     vernacularTitle: 'தெருக்கூத்து — திரௌபதி அம்மன் நாடகம்',
     scriptLabel: 'Tamil Script',
@@ -96,6 +97,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-silambam-paattu',
+    coordinates: { lat: 9.92, lng: 78.12 },
     title: 'Silambam Por-Paattu (Martial Ballad)',
     vernacularTitle: 'சிலம்பப் போர்ப்பாட்டு — களரி வாய்மொழி மரபு',
     scriptLabel: 'Tamil Script',
@@ -164,6 +166,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-kurumba-honey',
+    coordinates: { lat: 11.42, lng: 76.86 },
     title: 'Kurumba Honey-Gathering Chants',
     vernacularTitle: 'குறும்பா தேனெடுக்கும் வாய்மொழிப் பாடல்',
     scriptLabel: 'Tamil Script',
@@ -232,6 +235,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-toda-keli',
+    coordinates: { lat: 11.41, lng: 76.70 },
     title: 'Thoda Keli Chants (Toda Pastoral Hymns)',
     vernacularTitle: 'தோடர் எருமை வழிபாட்டுப் பாடல்',
     scriptLabel: 'Tamil Script',
@@ -300,6 +304,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-kaani-chants',
+    coordinates: { lat: 8.62, lng: 77.25 },
     title: 'Kaani Tribal Kaanikkarar Chants',
     vernacularTitle: 'காணி பழங்குடி மருத்துவ வாய்மொழிப் பாடல்',
     scriptLabel: 'Tamil Script',
@@ -368,6 +373,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-pandavani',
+    coordinates: { lat: 21.25, lng: 81.63 },
     title: 'Pandavani — Mahabharata Oral Ballad',
     vernacularTitle: 'पंडवानी — महाभारत मौखिक गाथा',
     scriptLabel: 'Devanagari Script',
@@ -436,6 +442,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-daskathia',
+    coordinates: { lat: 19.31, lng: 84.79 },
     title: 'Daskathia Oral Ballad',
     vernacularTitle: 'ଦଶକାଠିଆ ମୌଖିକ ଗୀତିକା',
     scriptLabel: 'Odia Script',
@@ -504,6 +511,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-theyyam-thottam',
+    coordinates: { lat: 12.01, lng: 75.27 },
     title: 'Theyyam Thottam — Sacred Invocatory Chants',
     vernacularTitle: 'തെയ്യം തോട്ടം — മലബാർ അനുഷ്ഠാന ഗാനം',
     scriptLabel: 'Malayalam Script',
@@ -572,6 +580,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-yakshagana-tenkutittu',
+    coordinates: { lat: 12.91, lng: 74.85 },
     title: 'Tenkutittu Yakshagana — Prasanga Ballad',
     vernacularTitle: 'ತೆಂಕುತಿಟ್ಟು ಯಕ್ಷಗಾನ — ಪ್ರಸಂಗ ಗಾಯನ',
     scriptLabel: 'Kannada Script',
@@ -640,6 +649,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-burrakatha',
+    coordinates: { lat: 16.30, lng: 80.43 },
     title: 'Burrakatha — Palnadu Heroic Ballad',
     vernacularTitle: 'బుర్రకథ — పల్నాటి యుద్ధ గాథ',
     scriptLabel: 'Telugu Script',
@@ -708,6 +718,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-oggu-katha',
+    coordinates: { lat: 17.97, lng: 79.59 },
     title: 'Oggu Katha — Mallanna Pastoral Ballad',
     vernacularTitle: 'ఒగ్గు కథ — మల్లన్న చరితం',
     scriptLabel: 'Telugu Script',
