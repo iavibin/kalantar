@@ -58,7 +58,20 @@
   transition: color var(--transition-fast);
 }
 
-.linkItem:hover {
+.linkItem button {
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color var(--transition-fast);
+}
+
+.linkItem:hover,
+.linkItem button:hover {
   color: var(--text-gold);
 }
 

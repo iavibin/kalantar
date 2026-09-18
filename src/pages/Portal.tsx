@@ -142,6 +142,24 @@ export const Portal: React.FC = () => {
     setIsContributeOpen(true);
   };
 
+  const handleFooterTabChange = (tab: ActiveTab) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFooterSelectTradition = (traditionQuery: string) => {
+    setSearchQuery(traditionQuery);
+    setActiveTab('search');
+    setTimeout(() => {
+      const portalElement = document.getElementById('search-portal');
+      if (portalElement) {
+        portalElement.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 380, behavior: 'smooth' });
+      }
+    }, 60);
+  };
+
   const handleResetFilters = () => {
     setSearchQuery('');
     setFilters({ sortBy: 'recommended' });
@@ -282,8 +300,8 @@ export const Portal: React.FC = () => {
       )}
 
       <Footer
-        onTabChange={setActiveTab}
-        onOpenContribute={() => handleOpenContribute()}
+        onTabChange={handleFooterTabChange}
+        onSelectTradition={handleFooterSelectTradition}
       />
     </div>
   );

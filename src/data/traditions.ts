@@ -24,7 +24,7 @@ export const TRADITIONS: Tradition[] = [
     activeApprentices: 0,
     community: 'Villisai Pulavar',
     duration: '4:35',
-    tags: ['Villu Pattu', 'Muthupattan', 'Bow Song', 'Tirunelveli', 'Heroic Ballad'],
+    tags: ['Villu Pattu', 'Villu Paatu', 'Muthupattan', 'Bow Song', 'Tirunelveli', 'Heroic Ballad'],
     tagMetadata: {
       theme: 'Heroic Ballad & Bow-Song',
       instruments: ['Villu (Musical Bow)', 'Udukku', 'Kudam', 'Thalam'],

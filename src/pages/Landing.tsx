@@ -162,21 +162,24 @@ export const Landing: React.FC = () => {
       </section>
 
       {/* Preservation Pillars */}
-      <section id="pillars" style={{ padding: '60px 0 90px' }}>
+      <section id="pillars" style={{ padding: '96px 0 100px', scrollMarginTop: '80px' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', marginBottom: '8px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.1rem', marginBottom: '10px' }}>
               Archival <span className="text-gold">Core Capabilities</span>
             </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.96rem', maxWidth: '640px', margin: '0 auto' }}>
               Built from the ground up for ethnomusicologists, researchers, and community custodians.
             </p>
           </div>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '24px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
+            maxWidth: '920px',
+            margin: '0 auto',
+            gap: '24px',
+            justifyContent: 'center'
           }}>
             <div style={{
               background: 'var(--bg-surface-1)',
