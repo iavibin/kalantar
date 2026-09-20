@@ -7,7 +7,6 @@ import { AudioPlayer } from '../components/AudioPlayer/AudioPlayer';
 import { KnowledgeGraph } from '../components/KnowledgeGraph/KnowledgeGraph';
 import { CulturalAtlas } from '../components/CulturalAtlas/CulturalAtlas';
 import { TraditionModal } from '../components/TraditionModal/TraditionModal';
-import { ContributeModal } from '../components/ContributeModal/ContributeModal';
 import { FieldRecorder } from '../components/FieldRecorder/FieldRecorder';
 import { AboutModal } from '../components/AboutModal/AboutModal';
 import { AuthModal } from '../components/AuthModal/AuthModal';
@@ -16,7 +15,6 @@ import { Footer } from '../components/Footer/Footer';
 
 import {
   Tradition,
-  Exhibition,
   KnowledgeGraphData,
   PreservationStats,
   FacetFilterState
@@ -48,6 +46,7 @@ export interface PortalContextType {
   handleOpenDossier: (tradition: Tradition) => void;
   handleOpenContribute: (tradition?: Tradition) => void;
   handleResetFilters: () => void;
+  refreshTraditions: () => Promise<void>;
   setEditingTradition: (tradition: Tradition | null) => void;
   handleDeleteTradition: (id: string) => Promise<void>;
 }
@@ -75,7 +74,6 @@ export const Portal: React.FC = () => {
     instruments: [],
     motifs: []
   });
-  const [, setExhibitions] = useState<Exhibition[]>([]);
   const [knowledgeGraph, setKnowledgeGraph] = useState<KnowledgeGraphData>({ nodes: [], edges: [] });
   const [stats, setStats] = useState<PreservationStats>({
     totalTraditions: 6,
@@ -90,23 +88,19 @@ export const Portal: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [selectedDossierTradition, setSelectedDossierTradition] = useState<Tradition | null>(null);
   const [editingTradition, setEditingTradition] = useState<Tradition | null>(null);
-  const [isContributeOpen, setIsContributeOpen] = useState<boolean>(false);
   const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
-  const [preselectedTradition, setPreselectedTradition] = useState<Tradition | null>(null);
   const [selectedGraphTraditionId, setSelectedGraphTraditionId] = useState<string | null>(null);
 
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const [fOptions, exhibs, kGraph, pStats] = await Promise.all([
+        const [fOptions, kGraph, pStats] = await Promise.all([
           traditionsRepo.getFilterFacets(),
-          traditionsRepo.getCuratedExhibitions(),
           traditionsRepo.getKnowledgeGraph(),
           traditionsRepo.getPreservationStats()
         ]);
         setFacetOptions(fOptions);
-        setExhibitions(exhibs);
         setKnowledgeGraph(kGraph);
         setStats(pStats);
       } catch (err) {
@@ -178,9 +172,8 @@ export const Portal: React.FC = () => {
     setSelectedDossierTradition(tradition);
   };
 
-  const handleOpenContribute = (tradition?: Tradition) => {
-    setPreselectedTradition(tradition || null);
-    setIsContributeOpen(true);
+  const handleOpenContribute = () => {
+    navigate('/portal/recorder');
   };
 
   const handleFooterSelectTradition = (traditionQuery: string) => {
@@ -236,6 +229,7 @@ export const Portal: React.FC = () => {
     handleOpenDossier,
     handleOpenContribute,
     handleResetFilters,
+    refreshTraditions,
     setEditingTradition,
     handleDeleteTradition
   };
@@ -266,9 +260,9 @@ export const Portal: React.FC = () => {
           tradition={selectedDossierTradition}
           onClose={() => setSelectedDossierTradition(null)}
           onPlay={handlePlayToggle}
-          onOpenAnnotate={(t) => {
+          onOpenAnnotate={() => {
             setSelectedDossierTradition(null);
-            handleOpenContribute(t);
+            handleOpenContribute();
           }}
         />
       )}
@@ -278,15 +272,6 @@ export const Portal: React.FC = () => {
           tradition={editingTradition}
           onClose={() => setEditingTradition(null)}
           onSave={handleSaveEdit}
-        />
-      )}
-
-      {isContributeOpen && (
-        <ContributeModal
-          traditions={traditions}
-          preselectedTradition={preselectedTradition}
-          onClose={() => setIsContributeOpen(false)}
-          onAnnotationSuccess={refreshTraditions}
         />
       )}
 
@@ -394,9 +379,10 @@ export const PortalMap: React.FC = () => {
 };
 
 export const PortalRecorder: React.FC = () => {
+  const { refreshTraditions } = usePortalContext();
   return (
     <main className="container">
-      <FieldRecorder />
+      <FieldRecorder onRecordSaved={refreshTraditions} />
     </main>
   );
 };

@@ -81,7 +81,6 @@ export const TRADITIONS: Tradition[] = [
     ],
     relatedIds: ['kaniyan-koothu-thiruvarul', 'pabuji-ki-phad-rajasthan'],
     featured: true,
-    // NOTE: Archival media entries (video URL is a placeholder pending final archival field footage upload)
     mediaGallery: [
       {
         type: 'image',
@@ -97,12 +96,6 @@ export const TRADITIONS: Tradition[] = [
         type: 'image',
         url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=80',
         caption: 'Village Kodai festival gathering listening to the heroic ballads of Muthupattan'
-      },
-      {
-        type: 'video',
-        // NOTE: Placeholder video stream pending archival field footage upload
-        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-        caption: 'Field archival recording: Rhythmic bowstriking and vocal call-and-response during the Muthupattan recital'
       }
     ]
   },
@@ -262,7 +255,6 @@ export const TRADITIONS: Tradition[] = [
     ],
     relatedIds: ['villu-pattu-muthupattan', 'marudha-nilam-oppari'],
     featured: true,
-    // NOTE: Curated mediaGallery entries (video URL is a placeholder pending final archival field footage upload)
     mediaGallery: [
       {
         type: 'image',
@@ -278,12 +270,6 @@ export const TRADITIONS: Tradition[] = [
         type: 'image',
         url: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80',
         caption: 'Twin Magudam frame drums struck in ecstatic polyrhythms through the night'
-      },
-      {
-        type: 'video',
-        // NOTE: Placeholder video stream pending archival field footage upload
-        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-        caption: 'Sacred nocturnal trance ceremony: Magudam drum polyrhythms invoking guardian spirits'
       }
     ]
   },
@@ -443,7 +429,6 @@ export const TRADITIONS: Tradition[] = [
     ],
     relatedIds: ['villu-pattu-muthupattan', 'baul-gaan-moner-manush'],
     featured: true,
-    // NOTE: Curated mediaGallery entries (video URL is a placeholder pending final archival field footage upload)
     mediaGallery: [
       {
         type: 'image',
@@ -459,12 +444,6 @@ export const TRADITIONS: Tradition[] = [
         type: 'image',
         url: 'https://images.unsplash.com/photo-1528728329032-2972f65dfb3f?auto=format&fit=crop&w=800&q=80',
         caption: 'Thirty-foot hand-painted Phad scroll illuminated by oil lamps during the desert vigil'
-      },
-      {
-        type: 'video',
-        // NOTE: Placeholder video stream pending archival field footage upload
-        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-        caption: 'Archival video: Pabuji Ki Phad recitation with Ravanahatha bowed accompaniment in Jodhpur'
       }
     ]
   },

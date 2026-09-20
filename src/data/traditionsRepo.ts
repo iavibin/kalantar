@@ -11,7 +11,6 @@ import {
   KnowledgeEdge,
   PreservationStats,
   FacetFilterState,
-  CommunityAnnotation,
   FieldRecordingSubmission
 } from './types';
 import type { OfflineRecording } from '../utils/offlineAudioStorage';
@@ -563,12 +562,12 @@ export const SEEDED_TRADITIONS: Tradition[] = [
       scaleOrRaga: 'Malabar Ritual Cadence',
       talaOrRhythm: 'Chenda Uruttu Rhythmic Cycle'
     },
-    versesSnippet: 'തീക്കനലിൽ കാലൂன்றி ஆடும் ഭഗവതി... തോട്ടം പാടി ഉണർത്തുന്നു മലനാട്!\n(Stepping upon glowing embers, the Goddess dances; with thottam chants Malanad awakens!)',
+    versesSnippet: 'തീക്കനലിൽ കാലൂன்றி ആടും ഭഗവതി... തോട്ടം പാടി ഉണർത്തുന്നു മലനാട്!\n(Stepping upon glowing embers, the Goddess dances; with thottam chants Malanad awakens!)',
     verses: [
       {
         id: 'thy-v1',
         timestamp: 0,
-        originalScript: 'തീക്കനലിൽ കാലൂன்றி ஆடும் ഭഗവതി... തോട്ടം പാടി ഉണർത്തുന്നു മലനാട്!',
+        originalScript: 'തീക്കനലിൽ കാലൂன்றி ആടും ഭഗവതി... തോട്ടം പാടി ഉണർത്തുന്നു മലനാട്!',
         scriptName: 'Malayalam',
         romanTransliteration: 'Theekkanalil kaaloorri aadum bhagavathi... thottam paadi unarthunnu malanaad!',
         englishTranslation: 'Stepping upon glowing embers, the Goddess dances; with thottam chants Malanad awakens!',
@@ -812,7 +811,6 @@ class TraditionsRepository {
     totalDialects: 13,
     endangeredDocumented: 12
   };
-  private annotations: CommunityAnnotation[] = [];
   private fieldRecordingsQueue: FieldRecordingSubmission[] = [];
 
   constructor() {
@@ -1119,19 +1117,7 @@ class TraditionsRepository {
   }
 
   /**
-   * Propose a community preservation annotation
-   */
-  public async submitCommunityAnnotation(annotation: CommunityAnnotation): Promise<{ success: boolean; message: string }> {
-    this.annotations.push(annotation);
-    this.stats.communityAnnotations += 1;
-    return this.delay({
-      success: true,
-      message: 'Oral annotation successfully submitted to the Kalantar Archival Verification Panel.'
-    }, 150);
-  }
-
-  /**
-   * Save a field recording to the offline-first in-memory sync queue
+   * Save a field recording to the offline-first in-memory sync queue and promote to live traditions
    */
   public async submitFieldRecording(recording: FieldRecordingSubmission): Promise<{ success: boolean; message: string; id: string }> {
     const id = recording.id || `rec-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -1143,14 +1129,23 @@ class TraditionsRepository {
     };
     this.fieldRecordingsQueue.push(entry);
 
+    const score = calculateEndangermentScore({
+      practitionerAge: recording.approximateAge || 65,
+      hasSuccessor: recording.hasSuccessor,
+      lastRecordedDaysAgo: 0,
+      livingPractitionerCount: 1
+    });
+    const level = getEndangermentLevel(score);
+    const vulnerabilityStatus = level === 'Critical' ? 'critical' : level === 'At Risk' ? 'endangered' : 'vulnerable';
+
     const tradition: Tradition = {
       id,
       title: recording.traditionTitle || 'Untitled Field Lore',
-      vernacularTitle: recording.traditionTitle || 'Untitled Field Lore',
-      scriptLabel: recording.dialect || 'Unspecified',
+      vernacularTitle: '',
+      scriptLabel: recording.dialect || 'Oral Dialect',
       region: recording.region || 'Field Location',
       state: recording.region || 'Field Location',
-      dialect: recording.dialect || 'Field Dialect',
+      dialect: recording.dialect || '',
       languageFamily: 'Dravidian',
       category: 'Heroic Ballad',
       culturalZone: recording.region || 'Field Recording',
@@ -1158,25 +1153,26 @@ class TraditionsRepository {
       livingPractitionerCount: 1,
       hasSuccessor: recording.hasSuccessor,
       lastRecordedDaysAgo: 0,
-      vulnerabilityStatus: 'endangered',
-      tags: ['field-recording', recording.dialect, recording.region].filter(Boolean),
+      vulnerabilityStatus,
+      endangermentScore: score,
+      tags: ['field-recording', recording.dialect, recording.region].filter(Boolean) as string[],
       tagMetadata: {
-        theme: 'Field Documentation',
+        theme: 'Oral Ballad',
         instruments: [],
         mood: 'Documentary'
       },
-      summary: recording.notes || `Field recording of ${recording.traditionTitle} by ${recording.leadPerformer}.`,
-      historicalContext: 'Captured via Kalantar field recording submission.',
+      summary: recording.notes || `Field recording of ${recording.traditionTitle} performed by ${recording.leadPerformer}.`,
+      historicalContext: '',
       performerLineage: {
         leadPerformer: recording.leadPerformer,
-        communityLineage: recording.communityLineage || 'Field Community',
+        communityLineage: '',
         region: recording.region || 'Unknown',
         state: recording.region || 'Unknown',
         district: recording.region || 'Unknown',
-        bio: `Recorded in ${recording.region}.`
+        bio: `Recorded in ${recording.region || 'the field'}.`
       },
       instruments: [],
-      ritualContext: 'Oral Field Lore',
+      ritualContext: '',
       motifs: [],
       relatedIds: [],
       audioTrack: {
@@ -1194,8 +1190,9 @@ class TraditionsRepository {
       verses: []
     };
 
-    this.traditions.push(tradition);
+    this.traditions.unshift(tradition);
     this.saveCustomTradition(tradition);
+    this.stats.totalTraditions = this.traditions.length;
 
     return this.delay({
       success: true,
@@ -1209,19 +1206,14 @@ class TraditionsRepository {
   }
 
   public async submitFieldRecordingFromOffline(recording: OfflineRecording): Promise<Tradition> {
-    const ageScore =
-      recording.practitionerAge >= 75 ? 40
-      : recording.practitionerAge >= 60 ? 25
-      : 10;
-    const successorScore = recording.hasSuccessor ? 5 : 35;
-    const recencyScore = 15;
-    const rawScore = Math.min(100, ageScore + successorScore + recencyScore);
-
-    const vulnerabilityStatus =
-      rawScore >= 70 ? 'critical'
-      : rawScore >= 40 ? 'endangered'
-      : rawScore >= 20 ? 'vulnerable'
-      : 'thriving';
+    const score = calculateEndangermentScore({
+      practitionerAge: recording.practitionerAge || 65,
+      hasSuccessor: recording.hasSuccessor,
+      lastRecordedDaysAgo: 0,
+      livingPractitionerCount: 1
+    });
+    const level = getEndangermentLevel(score);
+    const vulnerabilityStatus = level === 'Critical' ? 'critical' : level === 'At Risk' ? 'endangered' : 'vulnerable';
 
     const id = `field-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const recordingYear = new Date(recording.recordedAt).getFullYear();
@@ -1229,11 +1221,11 @@ class TraditionsRepository {
     const tradition: Tradition = {
       id,
       title: recording.traditionTitle || 'Untitled Field Recording',
-      vernacularTitle: recording.traditionTitle || 'Untitled Field Recording',
-      scriptLabel: recording.dialect || 'Unspecified',
+      vernacularTitle: '',
+      scriptLabel: recording.dialect || 'Oral Dialect',
       region: recording.location || 'Unknown Region',
       state: recording.location || 'Unknown Region',
-      dialect: recording.dialect || 'Unspecified Dialect',
+      dialect: recording.dialect || '',
       languageFamily: 'Dravidian',
       category: 'Heroic Ballad',
       culturalZone: recording.location || 'Field Recording',
@@ -1243,25 +1235,26 @@ class TraditionsRepository {
       hasSuccessor: recording.hasSuccessor,
       lastRecordedDaysAgo: 0,
       vulnerabilityStatus,
+      endangermentScore: score,
 
-      tags: ['field-recording', recording.dialect, recording.location].filter(Boolean),
+      tags: ['field-recording', recording.dialect, recording.location].filter(Boolean) as string[],
       tagMetadata: {
-        theme: 'Field Documentation',
+        theme: 'Oral Ballad',
         instruments: [],
         mood: 'Documentary'
       },
       summary: `Field recording captured by Kalantar volunteer. Practitioner: ${recording.practitionerName}, Age: ${recording.practitionerAge}. Location: ${recording.location}.`,
-      historicalContext: 'Captured via Kalantar offline field recording system.',
+      historicalContext: '',
       performerLineage: {
         leadPerformer: recording.practitionerName,
-        communityLineage: 'Field Documentation',
+        communityLineage: '',
         region: recording.location || 'Unknown',
         state: recording.location || 'Unknown',
         district: recording.location || 'Unknown',
-        bio: `Live field recording. Age: ${recording.practitionerAge}. Successor: ${recording.hasSuccessor ? 'Yes' : 'No'}.`
+        bio: `Recorded in ${recording.location || 'the field'}. Practitioner Age: ${recording.practitionerAge}. Successor Available: ${recording.hasSuccessor ? 'Yes' : 'No'}.`
       },
       instruments: [],
-      ritualContext: 'Field Documentation',
+      ritualContext: '',
       motifs: [],
       relatedIds: [],
 

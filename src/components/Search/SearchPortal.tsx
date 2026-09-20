@@ -280,10 +280,10 @@ export const SearchPortal: React.FC<SearchPortalProps> = ({
               <thead>
                 <tr>
                   <th>Oral Tradition</th>
-                  <th>Dialect & State</th>
+                  <th>Dialect & Region</th>
                   <th>Endangerment Score</th>
-                  <th>Lead Performer / Clan</th>
-                  <th>Key Instruments</th>
+                  <th>Lead Performer</th>
+                  <th>Category / Music</th>
                   <th>Audio Preview</th>
                   <th>Action</th>
                 </tr>
@@ -296,13 +296,21 @@ export const SearchPortal: React.FC<SearchPortalProps> = ({
                     <tr key={t.id}>
                       <td>
                         <div className={styles.tableTitle}>{t.title}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-saffron)' }}>
-                          {t.vernacularTitle}
-                        </div>
+                        {t.vernacularTitle &&
+                          t.vernacularTitle.trim() !== '' &&
+                          t.vernacularTitle !== t.title && (
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-saffron)' }}>
+                              {t.vernacularTitle}
+                            </div>
+                          )}
                       </td>
                       <td>
-                        <div style={{ color: 'var(--text-gold)', fontWeight: 600 }}>{t.dialect}</div>
-                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{t.state}</div>
+                        <div style={{ color: 'var(--text-gold)', fontWeight: 600 }}>
+                          {t.dialect && t.dialect !== 'Field Dialect' ? t.dialect : 'Living Dialect'}
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                          {t.region || t.state}
+                        </div>
                       </td>
                       <td>
                         {level === 'Critical' && (
@@ -316,20 +324,45 @@ export const SearchPortal: React.FC<SearchPortalProps> = ({
                         )}
                       </td>
                       <td>
-                        <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{t.performerLineage.leadPerformer}</div>
-                        <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{t.performerLineage.communityLineage}</div>
+                        <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>
+                          {t.performerLineage?.leadPerformer || 'Field Bard'}
+                          {t.practitionerAge ? (
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 400 }}>
+                              {' '}(Age {t.practitionerAge})
+                            </span>
+                          ) : null}
+                        </div>
+                        {t.performerLineage?.communityLineage &&
+                          t.performerLineage.communityLineage !== 'Field Community' &&
+                          t.performerLineage.communityLineage !== 'Field Documentation' && (
+                            <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+                              {t.performerLineage.communityLineage}
+                            </div>
+                          )}
                       </td>
                       <td>
-                        <div style={{ fontSize: '0.8rem' }}>{t.instruments[0] || 'Acoustic'}</div>
+                        <div style={{ fontSize: '0.8rem' }}>
+                          {(t.instruments && t.instruments[0]) || t.category || 'Oral Heritage'}
+                        </div>
                       </td>
                       <td>
                         <button
                           className={styles.statusBtn}
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(217,107,39,0.15)', color: 'var(--text-gold)' }}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 6,
+                            background: 'rgba(217,107,39,0.15)',
+                            color: 'var(--text-gold)'
+                          }}
                           onClick={() => onPlayToggle(t)}
                         >
                           <PlayIcon size={12} />
-                          <span>{Math.floor(t.audioTrack.durationSeconds / 60)}m</span>
+                          <span>
+                            {t.audioTrack?.durationSeconds
+                              ? `${Math.max(1, Math.round(t.audioTrack.durationSeconds / 60))}m`
+                              : '3m'}
+                          </span>
                         </button>
                       </td>
                       <td>

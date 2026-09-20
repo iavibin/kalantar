@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './FieldRecorder.module.css';
 import {
   MicIcon,
@@ -22,6 +23,10 @@ import {
 import { traditionsRepo } from '../../data/traditionsRepo';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface FieldRecorderProps {
+  onRecordSaved?: () => Promise<void> | void;
+}
 
 interface Toast {
   id: number;
@@ -54,14 +59,20 @@ function formatTimestamp(iso: string): string {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export const FieldRecorder: React.FC = () => {
+export const FieldRecorder: React.FC<FieldRecorderProps> = ({ onRecordSaved }) => {
+  const navigate = useNavigate();
+
   // ── Form state ────────────────────────────────────────────────────────────
   const [traditionTitle, setTraditionTitle] = useState<string>('');
   const [practitionerName, setPractitionerName] = useState<string>('');
-  const [practitionerAge, setPractitionerAge] = useState<string>('65');
-  const [location, setLocation] = useState<string>('Tamil Nadu');
+  const [practitionerAge, setPractitionerAge] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
   const [dialect, setDialect] = useState<string>('');
+  const [summaryNotes, setSummaryNotes] = useState<string>('');
   const [hasSuccessor, setHasSuccessor] = useState<boolean>(false);
+
+  // ── Form validation errors ────────────────────────────────────────────────
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // ── Audio recorder hook ───────────────────────────────────────────────────
   const {
@@ -110,6 +121,18 @@ export const FieldRecorder: React.FC = () => {
     };
   }, []);
 
+  // Clear audio validation error when audioBlob is captured
+  useEffect(() => {
+    if (audioBlob) {
+      setErrors((prev) => {
+        if (!prev.audio) return prev;
+        const next = { ...prev };
+        delete next.audio;
+        return next;
+      });
+    }
+  }, [audioBlob]);
+
   // Load IndexedDB queue on mount
   const refreshQueue = useCallback(async () => {
     try {
@@ -139,45 +162,110 @@ export const FieldRecorder: React.FC = () => {
   }, []);
 
   // ─────────────────────────────────────────────────────────────────────────
-  // Save to offline device
+  // Form Validation & Submission
   // ─────────────────────────────────────────────────────────────────────────
 
-  const handleSaveOffline = async () => {
-    if (!audioBlob || !practitionerName.trim()) return;
+  const validateForm = (): Record<string, string> => {
+    const errs: Record<string, string> = {};
+
+    if (!audioBlob) {
+      errs.audio = 'Audio recording is required. Please capture a recording before submitting.';
+    }
+
+    if (!practitionerName.trim()) {
+      errs.practitionerName = 'Practitioner / Bard Name is required.';
+    }
+
+    if (!practitionerAge.trim()) {
+      errs.practitionerAge = 'Approximate Age is required.';
+    } else {
+      const age = parseInt(practitionerAge, 10);
+      if (isNaN(age) || age < 1 || age > 130) {
+        errs.practitionerAge = 'Please enter a valid age between 1 and 130.';
+      }
+    }
+
+    if (!traditionTitle.trim()) {
+      errs.traditionTitle = 'Tradition Title is required.';
+    }
+
+    if (!location.trim()) {
+      errs.location = 'State / Region is required.';
+    }
+
+    return errs;
+  };
+
+  const handleSubmitRecording = async () => {
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      showToast('Please fill in all required fields and record audio before submitting.', 'error');
+      return;
+    }
 
     setIsSaving(true);
     try {
-      const entry: OfflineRecording = {
-        id: `rec-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-        audioBlob,
-        audioUrl: audioUrl ?? undefined,
-        durationSeconds: recordingDuration,
-        recordedAt: new Date().toISOString(),
-        practitionerName: practitionerName.trim(),
-        practitionerAge: practitionerAge ? parseInt(practitionerAge, 10) : 65,
-        traditionTitle: traditionTitle.trim() || 'Untitled Field Recording',
-        location: location.trim() || 'Unknown Location',
-        dialect: dialect.trim() || 'Unspecified Dialect',
+      // 1. Submit field recording directly to traditions repository (creates Tradition and unshifts into main library)
+      const res = await traditionsRepo.submitFieldRecording({
+        traditionTitle: traditionTitle.trim(),
+        leadPerformer: practitionerName.trim(),
+        approximateAge: parseInt(practitionerAge, 10),
+        region: location.trim(),
+        dialect: dialect.trim(),
         hasSuccessor,
-        synced: false,
-      };
+        notes: summaryNotes.trim() || undefined,
+        audioBlobUrl: audioUrl || '',
+        durationSeconds: recordingDuration || 180,
+      });
 
-      await saveOfflineRecording(entry);
-      showToast(`"${entry.traditionTitle}" saved to device. ${formatTime(recordingDuration)} of audio queued offline.`, 'success');
+      // 2. Also save to offline IndexedDB
+      try {
+        const entry: OfflineRecording = {
+          id: res.id,
+          audioBlob: audioBlob!,
+          audioUrl: audioUrl ?? undefined,
+          durationSeconds: recordingDuration,
+          recordedAt: new Date().toISOString(),
+          practitionerName: practitionerName.trim(),
+          practitionerAge: parseInt(practitionerAge, 10),
+          traditionTitle: traditionTitle.trim(),
+          location: location.trim(),
+          dialect: dialect.trim(),
+          hasSuccessor,
+          synced: true,
+        };
+        await saveOfflineRecording(entry);
+        await refreshQueue();
+      } catch (storageErr) {
+        console.warn('Offline storage notice:', storageErr);
+      }
 
-      // Reset form
+      showToast(`"${traditionTitle.trim()}" successfully contributed to the living archive!`, 'success');
+
+      // 3. Reset form
       clearRecording();
       setTraditionTitle('');
       setPractitionerName('');
-      setPractitionerAge('65');
-      setLocation('Tamil Nadu');
+      setPractitionerAge('');
+      setLocation('');
       setDialect('');
+      setSummaryNotes('');
       setHasSuccessor(false);
+      setErrors({});
 
-      await refreshQueue();
+      // 4. Refresh traditions in Portal context so search updates immediately without page reload
+      if (onRecordSaved) {
+        await onRecordSaved();
+      }
+
+      // 5. Seamlessly navigate to Orality Search
+      setTimeout(() => {
+        navigate('/portal/search');
+      }, 700);
     } catch (err) {
-      console.error('Failed to save offline recording:', err);
-      showToast('Failed to save recording to device storage. Please try again.', 'error');
+      console.error('Failed to submit field recording:', err);
+      showToast('Failed to submit recording. Please try again.', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -229,6 +317,9 @@ export const FieldRecorder: React.FC = () => {
     setIsSyncing(false);
 
     if (errorCount === 0) {
+      if (onRecordSaved) {
+        await onRecordSaved();
+      }
       showToast(
         `${successCount} recording${successCount !== 1 ? 's' : ''} synced to the Knowledge Base and now searchable.`,
         'success'
@@ -253,11 +344,10 @@ export const FieldRecorder: React.FC = () => {
     isRecording && !isPaused ? styles.recorderStationRecording : '',
     isPaused ? styles.recorderStationPaused : '',
     audioBlob && !isRecording && !isPaused ? styles.recorderStationDone : '',
+    errors.audio ? styles.recorderStationError : '',
   ]
     .filter(Boolean)
     .join(' ');
-
-  const canSave = !!audioBlob && !isRecording && !!practitionerName.trim();
 
   // ─────────────────────────────────────────────────────────────────────────
   // Render
@@ -411,66 +501,147 @@ export const FieldRecorder: React.FC = () => {
                   </>
                 )}
               </div>
+
+              {errors.audio && (
+                <div className={styles.inlineAudioError} id="error-audio-required">
+                  <span>⚠️</span>
+                  <span>{errors.audio}</span>
+                </div>
+              )}
             </div>
 
             {/* Practitioner info */}
             <div className={styles.formGrid2}>
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Practitioner / Bard Name *</label>
+                <label className={styles.formLabel}>
+                  Practitioner / Bard Name <span className={styles.requiredStar}>*</span>
+                </label>
                 <input
                   type="text"
-                  className={styles.formInput}
+                  required
+                  className={`${styles.formInput} ${errors.practitionerName ? styles.inputError : ''}`}
                   placeholder="e.g. Pulavar Subramania Asan"
                   value={practitionerName}
-                  onChange={(e) => setPractitionerName(e.target.value)}
+                  onChange={(e) => {
+                    setPractitionerName(e.target.value);
+                    if (errors.practitionerName) {
+                      setErrors((prev) => ({ ...prev, practitionerName: '' }));
+                    }
+                  }}
+                  id="input-practitioner-name"
                 />
+                {errors.practitionerName && (
+                  <span className={styles.fieldError} id="error-practitioner-name">
+                    {errors.practitionerName}
+                  </span>
+                )}
               </div>
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Approximate Age</label>
+                <label className={styles.formLabel}>
+                  Approximate Age <span className={styles.requiredStar}>*</span>
+                </label>
                 <input
                   type="number"
+                  required
                   min="1"
-                  max="120"
-                  className={styles.formInput}
+                  max="130"
+                  className={`${styles.formInput} ${errors.practitionerAge ? styles.inputError : ''}`}
                   placeholder="e.g. 72"
                   value={practitionerAge}
-                  onChange={(e) => setPractitionerAge(e.target.value)}
+                  onChange={(e) => {
+                    setPractitionerAge(e.target.value);
+                    if (errors.practitionerAge) {
+                      setErrors((prev) => ({ ...prev, practitionerAge: '' }));
+                    }
+                  }}
+                  id="input-practitioner-age"
                 />
+                {errors.practitionerAge && (
+                  <span className={styles.fieldError} id="error-practitioner-age">
+                    {errors.practitionerAge}
+                  </span>
+                )}
               </div>
             </div>
 
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Oral Tradition / Song Title</label>
+              <label className={styles.formLabel}>
+                Oral Tradition / Song Title <span className={styles.requiredStar}>*</span>
+              </label>
               <input
                 type="text"
-                className={styles.formInput}
+                required
+                className={`${styles.formInput} ${errors.traditionTitle ? styles.inputError : ''}`}
                 placeholder="e.g. Villu Paatu Ballad or Kaniyan Elegy"
                 value={traditionTitle}
-                onChange={(e) => setTraditionTitle(e.target.value)}
+                onChange={(e) => {
+                  setTraditionTitle(e.target.value);
+                  if (errors.traditionTitle) {
+                    setErrors((prev) => ({ ...prev, traditionTitle: '' }));
+                  }
+                }}
+                id="input-tradition-title"
               />
+              {errors.traditionTitle && (
+                <span className={styles.fieldError} id="error-tradition-title">
+                  {errors.traditionTitle}
+                </span>
+              )}
             </div>
 
             <div className={styles.formGrid2}>
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>State / Region</label>
+                <label className={styles.formLabel}>
+                  State / Region <span className={styles.requiredStar}>*</span>
+                </label>
                 <input
                   type="text"
-                  className={styles.formInput}
-                  placeholder="e.g. Tamil Nadu, Kerala"
+                  required
+                  className={`${styles.formInput} ${errors.location ? styles.inputError : ''}`}
+                  placeholder="e.g. Tamil Nadu, Kerala, Rajasthan"
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={(e) => {
+                    setLocation(e.target.value);
+                    if (errors.location) {
+                      setErrors((prev) => ({ ...prev, location: '' }));
+                    }
+                  }}
+                  id="input-location"
                 />
+                {errors.location && (
+                  <span className={styles.fieldError} id="error-location">
+                    {errors.location}
+                  </span>
+                )}
               </div>
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Dialect / Sub-variant</label>
+                <label className={styles.formLabel}>
+                  Dialect / Sub-variant <span className={styles.optionalTag}>(Optional)</span>
+                </label>
                 <input
                   type="text"
                   className={styles.formInput}
                   placeholder="e.g. Nellai Dialect, Malabar Tulu"
                   value={dialect}
                   onChange={(e) => setDialect(e.target.value)}
+                  id="input-dialect"
                 />
               </div>
+            </div>
+
+            {/* Summary of the Audio (Optional) */}
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>
+                Summary of the Audio <span className={styles.optionalTag}>(Optional)</span>
+              </label>
+              <textarea
+                rows={3}
+                className={styles.formTextarea}
+                placeholder="Brief summary of the oral performance, legend, or verses recited in this recording (2-3 lines)..."
+                value={summaryNotes}
+                onChange={(e) => setSummaryNotes(e.target.value)}
+                id="input-audio-summary"
+              />
             </div>
 
             {/* Succession toggle */}
@@ -480,6 +651,7 @@ export const FieldRecorder: React.FC = () => {
                 className={styles.successorCheckbox}
                 checked={hasSuccessor}
                 onChange={(e) => setHasSuccessor(e.target.checked)}
+                id="checkbox-has-successor"
               />
               <div>
                 <div className={styles.successorLabel}>
@@ -491,35 +663,29 @@ export const FieldRecorder: React.FC = () => {
               </div>
             </label>
 
-            {/* Save button */}
+            {/* Save / Submit button */}
             <button
               type="button"
               className={styles.saveBtn}
-              disabled={!canSave || isSaving}
-              onClick={handleSaveOffline}
-              title={
-                !audioBlob
-                  ? 'Record audio first before saving'
-                  : !practitionerName.trim()
-                  ? 'Enter the practitioner name before saving'
-                  : undefined
-              }
+              disabled={isSaving || isRecording}
+              onClick={handleSubmitRecording}
+              id="btn-submit-recording"
             >
               {isSaving ? (
                 <>
                   <span className={styles.syncSpinner} />
-                  Saving to Device…
+                  Saving &amp; Adding to Living Archive…
                 </>
               ) : (
                 <>
                   <ShieldCheckIcon size={16} />
-                  Save to Offline Device
+                  Submit Oral Tradition to Archive
                 </>
               )}
             </button>
             <p className={styles.saveBtnHint}>
               <ShieldCheckIcon size={12} />
-              Zero internet required · Audio stored in browser IndexedDB
+              Instant archival indexing · Audio stored safely in browser IndexedDB
             </p>
           </div>
         </div>
