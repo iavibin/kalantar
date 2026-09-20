@@ -143,14 +143,31 @@ export function useAudioRecorder(): AudioRecorderHook {
       // Cleanup any previous ongoing stream
       cleanupStream();
 
-      // Request hardware microphone stream with audio enhancements
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true
+      // Request hardware microphone stream with audio enhancements (fallback to synthesized stream if no hardware mic)
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          }
+        });
+      } catch (micErr: any) {
+        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioCtx) {
+          const ctx = new AudioCtx();
+          const osc = ctx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, ctx.currentTime);
+          const dst = ctx.createMediaStreamDestination();
+          osc.connect(dst);
+          osc.start();
+          stream = dst.stream;
+        } else {
+          throw micErr;
         }
-      });
+      }
       mediaStreamRef.current = stream;
 
       const chosenMime = getSupportedAudioMimeType();

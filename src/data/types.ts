@@ -182,16 +182,6 @@ export interface FacetFilterState {
   sortBy?: 'recommended' | 'score' | 'vitality' | 'alphabetical' | 'recency';
 }
 
-export interface CommunityAnnotation {
-  traditionId: string;
-  contributorName: string;
-  roleOrCommunity: string;
-  dialectAffiliation: string;
-  annotationType: 'verse_correction' | 'cultural_context' | 'lineage_update' | 'alternative_variant';
-  proposedText: string;
-  referenceSource?: string;
-}
-
 export interface FieldRecordingSubmission {
   id?: string;
   traditionTitle: string;

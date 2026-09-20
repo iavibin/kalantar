@@ -13,21 +13,22 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 76px;
+  height: 68px;
   gap: 24px;
 }
 
 .brandGroup {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   cursor: pointer;
   user-select: none;
+  text-decoration: none;
 }
 
 .emblem {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--saffron-600), var(--gold-500));
   display: flex;
@@ -36,6 +37,7 @@
   box-shadow: 0 0 16px rgba(217, 107, 39, 0.35);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .emblem::after {
@@ -54,11 +56,12 @@
   font-size: 1.25rem;
   font-weight: 900;
   color: var(--text-gold);
+  line-height: 1;
 }
 
 .brandText {
   display: flex;
-  flex-direction: column;
+  align-items: center;
 }
 
 .brandTitle {
@@ -70,6 +73,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  line-height: 1;
 }
 
 .vernacularBadge {
@@ -81,14 +85,6 @@
   padding: 2px 8px;
   border-radius: var(--radius-xs);
   border: 1px solid rgba(212, 175, 55, 0.25);
-}
-
-.brandSubtitle {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-weight: 500;
 }
 
 .navTabs {
@@ -110,6 +106,7 @@
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-secondary);
+  text-decoration: none;
   transition: all var(--transition-fast);
 }
 
@@ -240,9 +237,6 @@
 
 @media (max-width: 992px) {
   .navTabs {
-    display: none;
-  }
-  .brandSubtitle {
     display: none;
   }
 }

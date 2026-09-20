@@ -11,7 +11,6 @@ import {
   KnowledgeEdge,
   PreservationStats,
   FacetFilterState,
-  CommunityAnnotation,
   FieldRecordingSubmission
 } from './types';
 import type { OfflineRecording } from '../utils/offlineAudioStorage';
@@ -28,6 +27,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   ...TRADITIONS,
   {
     id: 'trad-therukoothu',
+    coordinates: { lat: 12.83, lng: 79.70 },
     title: 'Therukoothu — Draupadi Amman Natakam',
     vernacularTitle: 'தெருக்கூத்து — திரௌபதி அம்மன் நாடகம்',
     scriptLabel: 'Tamil Script',
@@ -96,6 +96,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-silambam-paattu',
+    coordinates: { lat: 9.85, lng: 78.48 },
     title: 'Silambam Por-Paattu (Martial Ballad)',
     vernacularTitle: 'சிலம்பப் போர்ப்பாட்டு — களரி வாய்மொழி மரபு',
     scriptLabel: 'Tamil Script',
@@ -164,6 +165,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-kurumba-honey',
+    coordinates: { lat: 11.42, lng: 76.86 },
     title: 'Kurumba Honey-Gathering Chants',
     vernacularTitle: 'குறும்பா தேனெடுக்கும் வாய்மொழிப் பாடல்',
     scriptLabel: 'Tamil Script',
@@ -232,6 +234,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-toda-keli',
+    coordinates: { lat: 11.41, lng: 76.70 },
     title: 'Thoda Keli Chants (Toda Pastoral Hymns)',
     vernacularTitle: 'தோடர் எருமை வழிபாட்டுப் பாடல்',
     scriptLabel: 'Tamil Script',
@@ -300,6 +303,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-kaani-chants',
+    coordinates: { lat: 8.62, lng: 77.25 },
     title: 'Kaani Tribal Kaanikkarar Chants',
     vernacularTitle: 'காணி பழங்குடி மருத்துவ வாய்மொழிப் பாடல்',
     scriptLabel: 'Tamil Script',
@@ -368,6 +372,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-pandavani',
+    coordinates: { lat: 21.25, lng: 81.63 },
     title: 'Pandavani — Mahabharata Oral Ballad',
     vernacularTitle: 'पंडवानी — महाभारत मौखिक गाथा',
     scriptLabel: 'Devanagari Script',
@@ -436,6 +441,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-daskathia',
+    coordinates: { lat: 19.31, lng: 84.79 },
     title: 'Daskathia Oral Ballad',
     vernacularTitle: 'ଦଶକାଠିଆ ମୌଖିକ ଗୀତିକା',
     scriptLabel: 'Odia Script',
@@ -501,6 +507,282 @@ export const SEEDED_TRADITIONS: Tradition[] = [
     ],
     relatedIds: ['trad-pandavani', 'baul-gaan-moner-manush'],
     featured: true
+  },
+  {
+    id: 'trad-theyyam-thottam',
+    coordinates: { lat: 12.01, lng: 75.27 },
+    title: 'Theyyam Thottam — Sacred Invocatory Chants',
+    vernacularTitle: 'തെയ്യം തോട്ടം — മലബാർ അനുഷ്ഠാന ഗാനം',
+    scriptLabel: 'Malayalam Script',
+    region: 'Kannur & Kasaragod',
+    state: 'Kerala',
+    dialect: 'North Malabar Malayalam',
+    languageFamily: 'Dravidian',
+    category: 'Ritual Trance Invocations',
+    culturalZone: 'Malabar Coast & Western Foothills',
+    practitionerAge: 76,
+    livingPractitionerCount: 3,
+    hasSuccessor: true,
+    lastRecordedDaysAgo: 35,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 82,
+    activeApprentices: 2,
+    community: 'Vannan & Malayan Performers',
+    duration: '5:20',
+    tags: ['Theyyam Thottam', 'Theyyam', 'Thottam', 'Malabar', 'Ritual Chants', 'Kerala'],
+    tagMetadata: {
+      theme: 'Ritual Trance Invocations',
+      instruments: ['Chenda (Cylindrical Drum)', 'Ilathalam (Bronze Cymbals)', 'Kuzhal'],
+      mood: 'Fierce & Transcendent'
+    },
+    summary: 'Archaic ritual oral ballads intoned by hereditary dancers in North Malabar to awaken deity personas before stepping into the blazing temple flames.',
+    historicalContext: 'Sung during annual Kaliyattam shrines in northern Kerala, chronicling heroic ancestors and deities transformed into sacred presences.',
+    performerLineage: {
+      leadPerformer: 'Kannan Panicker',
+      communityLineage: 'Vannan & Malayan Performers',
+      region: 'Kannur & Kasaragod',
+      state: 'Kerala',
+      district: 'Kannur',
+      bio: 'Master Theyyam chanter and dancer holding archaic North Malabar ritual thottam oral cycles.'
+    },
+    instruments: ['Chenda (Cylindrical Drum)', 'Ilathalam (Bronze Cymbals)', 'Kuzhal'],
+    ritualContext: 'All-night sacred grove and shrine rituals during annual Kaliyattam festivities.',
+    motifs: ['Fire Walking Pyre', 'Awakening of Muchilot Bhagavathi', 'Sacred Grove Sanctuary'],
+    audioTrack: {
+      id: 'aud-theyyam-thottam',
+      title: 'Theyyam Thottam Invocatory Chant',
+      durationSeconds: 320,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Payyanur, Kannur, Kerala',
+      waveformPeaks: [0.4, 0.7, 0.9, 0.95, 0.85, 0.9, 0.95, 0.8, 0.85, 0.9, 0.75, 0.8, 0.9, 0.85, 0.7, 0.85, 0.9, 0.8, 0.7, 0.85, 0.9, 0.75, 0.6, 0.8, 0.85, 0.7, 0.55, 0.75, 0.8, 0.5],
+      audioToneType: 'percussive_chant',
+      bpm: 136,
+      scaleOrRaga: 'Malabar Ritual Cadence',
+      talaOrRhythm: 'Chenda Uruttu Rhythmic Cycle'
+    },
+    versesSnippet: 'തീക്കനലിൽ കാലൂன்றி ആടും ഭഗവതി... തോട്ടം പാടി ഉണർത്തുന്നു മലനാട്!\n(Stepping upon glowing embers, the Goddess dances; with thottam chants Malanad awakens!)',
+    verses: [
+      {
+        id: 'thy-v1',
+        timestamp: 0,
+        originalScript: 'തീക്കനലിൽ കാലൂன்றி ആടും ഭഗവതി... തോട്ടം പാടി ഉണർത്തുന്നു മലനാട്!',
+        scriptName: 'Malayalam',
+        romanTransliteration: 'Theekkanalil kaaloorri aadum bhagavathi... thottam paadi unarthunnu malanaad!',
+        englishTranslation: 'Stepping upon glowing embers, the Goddess dances; with thottam chants Malanad awakens!',
+        culturalNote: 'Chanted in archaic Malayalam at midnight as ritual headdresses and fiery embers are prepared.'
+      }
+    ],
+    relatedIds: ['kaniyan-koothu-thiruvarul', 'villu-pattu-muthupattan'],
+    featured: true
+  },
+  {
+    id: 'trad-yakshagana-tenkutittu',
+    coordinates: { lat: 12.91, lng: 74.85 },
+    title: 'Tenkutittu Yakshagana — Prasanga Ballad',
+    vernacularTitle: 'ತೆಂಕುತಿಟ್ಟು ಯಕ್ಷಗಾನ — ಪ್ರಸಂಗ ಗಾಯನ',
+    scriptLabel: 'Kannada Script',
+    region: 'Dakshina Kannada & Udupi',
+    state: 'Karnataka',
+    dialect: 'Coastal Tulu-Kannada',
+    languageFamily: 'Dravidian',
+    category: 'Epic Dramatic Recitation',
+    culturalZone: 'Coastal Karavali & Western Ghats',
+    practitionerAge: 72,
+    livingPractitionerCount: 4,
+    hasSuccessor: true,
+    lastRecordedDaysAgo: 45,
+    vulnerabilityStatus: 'endangered',
+    endangermentScore: 68,
+    activeApprentices: 3,
+    community: 'Bhagavata Lineages',
+    duration: '5:10',
+    tags: ['Tenkutittu Yakshagana', 'Yakshagana', 'Tenkutittu', 'Karnataka', 'Tulu', 'Bhagavatha'],
+    tagMetadata: {
+      theme: 'Epic Dramatic Recitation',
+      instruments: ['Chande (High-pitched Drum)', 'Maddale (Percussion)', 'Thala (Finger Cymbals)'],
+      mood: 'Heroic & Dramatic'
+    },
+    summary: 'High-energy Southern style oral narrative theatre led by the Bhagavata chanter, whose powerful high-register vocal cadences guide masked heroic performers.',
+    historicalContext: 'Narrated through coastal Karnataka all night during harvest months, enacting epic conflicts between gods, demons, and chivalric heroes.',
+    performerLineage: {
+      leadPerformer: 'Shridhar Bhagavata',
+      communityLineage: 'Bhagavata Lineages',
+      region: 'Dakshina Kannada & Udupi',
+      state: 'Karnataka',
+      district: 'Dakshina Kannada',
+      bio: 'Renowned Bhagavata vocalist who holds thousands of archaic poetic verses from the Tenkutittu repertory.'
+    },
+    instruments: ['Chande (High-pitched Drum)', 'Maddale (Percussion)', 'Thala (Finger Cymbals)'],
+    ritualContext: 'Open-air paddy field stages and temple courtyards during winter harvest festivals.',
+    motifs: ['Battle of Kurukshetra', 'Chande War Cadence', 'Bhagavatha Lyrical Command'],
+    audioTrack: {
+      id: 'aud-yakshagana-tenkutittu',
+      title: 'Tenkutittu Yakshagana Prasanga Verse',
+      durationSeconds: 310,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Mangalore, Karnataka',
+      waveformPeaks: [0.5, 0.75, 0.95, 0.9, 0.85, 0.9, 0.95, 0.8, 0.85, 0.9, 0.85, 0.7, 0.85, 0.9, 0.8, 0.85, 0.9, 0.75, 0.6, 0.8, 0.85, 0.7, 0.55, 0.75, 0.8, 0.65, 0.45, 0.3],
+      audioToneType: 'percussive_chant',
+      bpm: 140,
+      scaleOrRaga: 'Nati / Mohana Folk Blend',
+      talaOrRhythm: 'Tisra Chande Syncopation'
+    },
+    versesSnippet: 'ರಣರಂಗದಿ ವೀರ ರವಿಯು ಮೂಡಿದನು, ಧರ್ಮದ ರಕ್ಷೆಗೆ ಖಡ್ಗವನೆತ್ತಿದನು!\n(On the battle-plain the valiant sun arose; for righteous duty he drew the gleaming blade!)',
+    verses: [
+      {
+        id: 'yak-v1',
+        timestamp: 0,
+        originalScript: 'ರಣರಂಗದಿ ವೀರ ರವಿಯು ಮೂಡಿದನು, ಧರ್ಮದ ರಕ್ಷೆಗೆ ಖಡ್ಗವನೆತ್ತಿದನು!',
+        scriptName: 'Kannada',
+        romanTransliteration: 'Raṇaraṅgadi vīra raviyu mūḍidanu, dharmada rakṣege khaḍgavannettidanu!',
+        englishTranslation: 'On the battle-plain the valiant sun arose; for righteous duty he drew the gleaming blade!',
+        culturalNote: 'Sung at the highest vocal register to cut through the resonant roar of Chande and Maddale drums.'
+      }
+    ],
+    relatedIds: ['trad-therukoothu', 'villu-pattu-muthupattan'],
+    featured: true
+  },
+  {
+    id: 'trad-burrakatha',
+    coordinates: { lat: 16.30, lng: 80.43 },
+    title: 'Burrakatha — Palnadu Heroic Ballad',
+    vernacularTitle: 'బుర్రకథ — పల్నాటి యుద్ధ గాథ',
+    scriptLabel: 'Telugu Script',
+    region: 'Guntur & Rayalaseema',
+    state: 'Andhra Pradesh',
+    dialect: 'Rayalaseema & Palnadu Telugu',
+    languageFamily: 'Dravidian',
+    category: 'Heroic Ballad Recitation',
+    culturalZone: 'Krishna Basin & Rayalaseema Hills',
+    practitionerAge: 75,
+    livingPractitionerCount: 2,
+    hasSuccessor: true,
+    lastRecordedDaysAgo: 50,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 80,
+    activeApprentices: 1,
+    community: 'Burrakatha Troupe Masters',
+    duration: '4:55',
+    tags: ['Burrakatha', 'Palnadu', 'Tambura', 'Andhra Pradesh', 'Heroic Ballad', 'Telugu'],
+    tagMetadata: {
+      theme: 'Heroic Ballad Recitation',
+      instruments: ['Tambura', 'Gummeta (Clay drum / Dakki)', 'Andelu (Anklet bells)'],
+      mood: 'Spirited & Chivalric'
+    },
+    summary: 'A dynamic three-person ballad tradition featuring a principal storyteller (Kathakudu) playing Tambura and two side-commentators beating earthen Gummeta drums.',
+    historicalContext: 'Recounts historic chronicles of the Battle of Palnadu and peasant struggles across villages of Andhra Pradesh and Telangana.',
+    performerLineage: {
+      leadPerformer: 'Venkata Subbaiah Dalapathi',
+      communityLineage: 'Burrakatha Troupe Masters',
+      region: 'Guntur & Rayalaseema',
+      state: 'Andhra Pradesh',
+      district: 'Guntur',
+      bio: 'Master storyteller sustaining the oral narrative art of Palnadu ballads and folk historical memory.'
+    },
+    instruments: ['Tambura', 'Gummeta (Clay drum / Dakki)', 'Andelu (Anklet bells)'],
+    ritualContext: 'Village open-air gatherings, festival grounds, and agrarian community assemblies.',
+    motifs: ['Hero of Palnadu', 'Twin Gummeta Cadence', 'Righteous Peasant Lore'],
+    audioTrack: {
+      id: 'aud-burrakatha',
+      title: 'Burrakatha Palnadu Battle Chant',
+      durationSeconds: 295,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Macherla, Guntur, Andhra Pradesh',
+      waveformPeaks: [0.3, 0.6, 0.85, 0.9, 0.95, 0.8, 0.85, 0.9, 0.8, 0.7, 0.85, 0.9, 0.8, 0.85, 0.9, 0.8, 0.7, 0.85, 0.9, 0.75, 0.6, 0.8, 0.85, 0.7, 0.55, 0.75, 0.8, 0.65, 0.45, 0.3],
+      audioToneType: 'plucked_lute',
+      bpm: 128,
+      scaleOrRaga: 'Telugu Janapada Raga',
+      talaOrRhythm: 'Gummeta Driving Rhythm'
+    },
+    versesSnippet: 'పల్నాటి నేల పై పొంగిన పౌరుషం... తంబూరా తీగపై పలికేను గాథలు!\n(Valor surged across the soil of Palnadu; upon the strumming tambura strings, legends resound!)',
+    verses: [
+      {
+        id: 'bur-v1',
+        timestamp: 0,
+        originalScript: 'పల్నాటి నేల పై పొంగిన పౌరుషం... తంబూరా తీగపై పలికేను గాథలు!',
+        scriptName: 'Telugu',
+        romanTransliteration: 'Palnāṭi nēla pai poṅgina pauruṣaṁ... tambūrā tīgapai palikēnu gādhalu!',
+        englishTranslation: 'Valor surged across the soil of Palnadu; upon the strumming tambura strings, legends resound!',
+        culturalNote: 'The Rajakiya side-commentator intersperses satirical social wit while the Hasyaka humorist entertains the village assembly.'
+      }
+    ],
+    relatedIds: ['trad-oggu-katha', 'villu-pattu-muthupattan'],
+    featured: true
+  },
+  {
+    id: 'trad-oggu-katha',
+    coordinates: { lat: 17.97, lng: 79.59 },
+    title: 'Oggu Katha — Mallanna Pastoral Ballad',
+    vernacularTitle: 'ఒగ్గు కథ — మల్లన్న చరితం',
+    scriptLabel: 'Telugu Script',
+    region: 'Warangal & Karimnagar',
+    state: 'Telangana',
+    dialect: 'Telangana Rural Telugu',
+    languageFamily: 'Dravidian',
+    category: 'Pastoral Epic & Ritual Chant',
+    culturalZone: 'Godavari Basin & Deccan Plateau',
+    practitionerAge: 77,
+    livingPractitionerCount: 2,
+    hasSuccessor: true,
+    lastRecordedDaysAgo: 40,
+    vulnerabilityStatus: 'critical',
+    endangermentScore: 85,
+    activeApprentices: 2,
+    community: 'Kuruma & Yadava Bards',
+    duration: '5:00',
+    tags: ['Oggu Katha', 'Mallanna', 'Jaggu Drum', 'Telangana', 'Kuruma', 'Pastoral Ballad'],
+    tagMetadata: {
+      theme: 'Pastoral Epic & Ritual Chant',
+      instruments: ['Jaggu (Brass Hourglass Drum)', 'Thalam (Cymbals)', 'Tappeta'],
+      mood: 'Ecstatic & Pastoral'
+    },
+    summary: 'A devotional and chivalric ballad tradition of the Kuruma shepherd community, accompanied by the energetic resonance of the large brass Jaggu hourglass drum.',
+    historicalContext: 'Chanted during the annual Mallanna Jathara pilgrimage in Telangana, preserving pastoral origin epics and shepherd genealogies.',
+    performerLineage: {
+      leadPerformer: 'Mallaiah Oggu Pujari',
+      communityLineage: 'Kuruma & Yadava Bards',
+      region: 'Warangal & Karimnagar',
+      state: 'Telangana',
+      district: 'Warangal',
+      bio: 'Elder Oggu priest-bard carrying forward sacred Mallanna pilgrimage chants and oral pastoral lore.'
+    },
+    instruments: ['Jaggu (Brass Hourglass Drum)', 'Thalam (Cymbals)', 'Tappeta'],
+    ritualContext: 'Mallanna Jathara temple festivals and sheep pen consecration ceremonies.',
+    motifs: ['Lord Mallanna Journey', 'Jaggu Drum Thunder', 'Shepherd Flock Prosperity'],
+    audioTrack: {
+      id: 'aud-oggu-katha',
+      title: 'Oggu Katha Mallanna Ballad',
+      durationSeconds: 300,
+      sampleRateKhz: 48,
+      recordingYear: 2024,
+      fieldRecordist: 'Kalantar Field Unit',
+      recordingLocation: 'Komuravelli, Warangal, Telangana',
+      waveformPeaks: [0.35, 0.7, 0.9, 0.95, 0.85, 0.9, 0.95, 0.85, 0.75, 0.9, 0.95, 0.8, 0.85, 0.9, 0.85, 0.75, 0.85, 0.9, 0.8, 0.7, 0.85, 0.9, 0.75, 0.6, 0.8, 0.85, 0.7, 0.55, 0.4, 0.3],
+      audioToneType: 'percussive_chant',
+      bpm: 134,
+      scaleOrRaga: 'Telangana Oggu Folk Mode',
+      talaOrRhythm: 'Jaggu Resonant Pulse'
+    },
+    versesSnippet: 'డమరుకం మోగెనో మల్లన్న... గొర్రెల కాపరుల కాపాడ రారో!\n(The Jaggu drum thunders, Lord Mallanna... come safeguard the flocks of your shepherds!)',
+    verses: [
+      {
+        id: 'ogg-v1',
+        timestamp: 0,
+        originalScript: 'డమరుకం మోగెనో మల్లన్న... గొర్రెల కాపరుల కాపాడ రారో!',
+        scriptName: 'Telugu',
+        romanTransliteration: 'Ḍamarukaṁ mōgenō mallanna... gorrela kāparula kāpāḍa rārō!',
+        englishTranslation: 'The Jaggu drum thunders, Lord Mallanna... come safeguard the flocks of your shepherds!',
+        culturalNote: 'Sung while striking the brass Jaggu drum and sprinkling sacred turmeric (bhandar) upon devotees.'
+      }
+    ],
+    relatedIds: ['trad-burrakatha', 'trad-theyyam-thottam'],
+    featured: true
   }
 ];
 
@@ -529,7 +811,6 @@ class TraditionsRepository {
     totalDialects: 13,
     endangeredDocumented: 12
   };
-  private annotations: CommunityAnnotation[] = [];
   private fieldRecordingsQueue: FieldRecordingSubmission[] = [];
 
   constructor() {
@@ -836,19 +1117,7 @@ class TraditionsRepository {
   }
 
   /**
-   * Propose a community preservation annotation
-   */
-  public async submitCommunityAnnotation(annotation: CommunityAnnotation): Promise<{ success: boolean; message: string }> {
-    this.annotations.push(annotation);
-    this.stats.communityAnnotations += 1;
-    return this.delay({
-      success: true,
-      message: 'Oral annotation successfully submitted to the Kalantar Archival Verification Panel.'
-    }, 150);
-  }
-
-  /**
-   * Save a field recording to the offline-first in-memory sync queue
+   * Save a field recording to the offline-first in-memory sync queue and promote to live traditions
    */
   public async submitFieldRecording(recording: FieldRecordingSubmission): Promise<{ success: boolean; message: string; id: string }> {
     const id = recording.id || `rec-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -860,14 +1129,23 @@ class TraditionsRepository {
     };
     this.fieldRecordingsQueue.push(entry);
 
+    const score = calculateEndangermentScore({
+      practitionerAge: recording.approximateAge || 65,
+      hasSuccessor: recording.hasSuccessor,
+      lastRecordedDaysAgo: 0,
+      livingPractitionerCount: 1
+    });
+    const level = getEndangermentLevel(score);
+    const vulnerabilityStatus = level === 'Critical' ? 'critical' : level === 'At Risk' ? 'endangered' : 'vulnerable';
+
     const tradition: Tradition = {
       id,
       title: recording.traditionTitle || 'Untitled Field Lore',
-      vernacularTitle: recording.traditionTitle || 'Untitled Field Lore',
-      scriptLabel: recording.dialect || 'Unspecified',
+      vernacularTitle: '',
+      scriptLabel: recording.dialect || 'Oral Dialect',
       region: recording.region || 'Field Location',
       state: recording.region || 'Field Location',
-      dialect: recording.dialect || 'Field Dialect',
+      dialect: recording.dialect || '',
       languageFamily: 'Dravidian',
       category: 'Heroic Ballad',
       culturalZone: recording.region || 'Field Recording',
@@ -875,25 +1153,26 @@ class TraditionsRepository {
       livingPractitionerCount: 1,
       hasSuccessor: recording.hasSuccessor,
       lastRecordedDaysAgo: 0,
-      vulnerabilityStatus: 'endangered',
-      tags: ['field-recording', recording.dialect, recording.region].filter(Boolean),
+      vulnerabilityStatus,
+      endangermentScore: score,
+      tags: ['field-recording', recording.dialect, recording.region].filter(Boolean) as string[],
       tagMetadata: {
-        theme: 'Field Documentation',
+        theme: 'Oral Ballad',
         instruments: [],
         mood: 'Documentary'
       },
-      summary: recording.notes || `Field recording of ${recording.traditionTitle} by ${recording.leadPerformer}.`,
-      historicalContext: 'Captured via Kalantar field recording submission.',
+      summary: recording.notes || `Field recording of ${recording.traditionTitle} performed by ${recording.leadPerformer}.`,
+      historicalContext: '',
       performerLineage: {
         leadPerformer: recording.leadPerformer,
-        communityLineage: recording.communityLineage || 'Field Community',
+        communityLineage: '',
         region: recording.region || 'Unknown',
         state: recording.region || 'Unknown',
         district: recording.region || 'Unknown',
-        bio: `Recorded in ${recording.region}.`
+        bio: `Recorded in ${recording.region || 'the field'}.`
       },
       instruments: [],
-      ritualContext: 'Oral Field Lore',
+      ritualContext: '',
       motifs: [],
       relatedIds: [],
       audioTrack: {
@@ -911,8 +1190,9 @@ class TraditionsRepository {
       verses: []
     };
 
-    this.traditions.push(tradition);
+    this.traditions.unshift(tradition);
     this.saveCustomTradition(tradition);
+    this.stats.totalTraditions = this.traditions.length;
 
     return this.delay({
       success: true,
@@ -926,19 +1206,14 @@ class TraditionsRepository {
   }
 
   public async submitFieldRecordingFromOffline(recording: OfflineRecording): Promise<Tradition> {
-    const ageScore =
-      recording.practitionerAge >= 75 ? 40
-      : recording.practitionerAge >= 60 ? 25
-      : 10;
-    const successorScore = recording.hasSuccessor ? 5 : 35;
-    const recencyScore = 15;
-    const rawScore = Math.min(100, ageScore + successorScore + recencyScore);
-
-    const vulnerabilityStatus =
-      rawScore >= 70 ? 'critical'
-      : rawScore >= 40 ? 'endangered'
-      : rawScore >= 20 ? 'vulnerable'
-      : 'thriving';
+    const score = calculateEndangermentScore({
+      practitionerAge: recording.practitionerAge || 65,
+      hasSuccessor: recording.hasSuccessor,
+      lastRecordedDaysAgo: 0,
+      livingPractitionerCount: 1
+    });
+    const level = getEndangermentLevel(score);
+    const vulnerabilityStatus = level === 'Critical' ? 'critical' : level === 'At Risk' ? 'endangered' : 'vulnerable';
 
     const id = `field-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const recordingYear = new Date(recording.recordedAt).getFullYear();
@@ -946,11 +1221,11 @@ class TraditionsRepository {
     const tradition: Tradition = {
       id,
       title: recording.traditionTitle || 'Untitled Field Recording',
-      vernacularTitle: recording.traditionTitle || 'Untitled Field Recording',
-      scriptLabel: recording.dialect || 'Unspecified',
+      vernacularTitle: '',
+      scriptLabel: recording.dialect || 'Oral Dialect',
       region: recording.location || 'Unknown Region',
       state: recording.location || 'Unknown Region',
-      dialect: recording.dialect || 'Unspecified Dialect',
+      dialect: recording.dialect || '',
       languageFamily: 'Dravidian',
       category: 'Heroic Ballad',
       culturalZone: recording.location || 'Field Recording',
@@ -960,25 +1235,26 @@ class TraditionsRepository {
       hasSuccessor: recording.hasSuccessor,
       lastRecordedDaysAgo: 0,
       vulnerabilityStatus,
+      endangermentScore: score,
 
-      tags: ['field-recording', recording.dialect, recording.location].filter(Boolean),
+      tags: ['field-recording', recording.dialect, recording.location].filter(Boolean) as string[],
       tagMetadata: {
-        theme: 'Field Documentation',
+        theme: 'Oral Ballad',
         instruments: [],
         mood: 'Documentary'
       },
       summary: `Field recording captured by Kalantar volunteer. Practitioner: ${recording.practitionerName}, Age: ${recording.practitionerAge}. Location: ${recording.location}.`,
-      historicalContext: 'Captured via Kalantar offline field recording system.',
+      historicalContext: '',
       performerLineage: {
         leadPerformer: recording.practitionerName,
-        communityLineage: 'Field Documentation',
+        communityLineage: '',
         region: recording.location || 'Unknown',
         state: recording.location || 'Unknown',
         district: recording.location || 'Unknown',
-        bio: `Live field recording. Age: ${recording.practitionerAge}. Successor: ${recording.hasSuccessor ? 'Yes' : 'No'}.`
+        bio: `Recorded in ${recording.location || 'the field'}. Practitioner Age: ${recording.practitionerAge}. Successor Available: ${recording.hasSuccessor ? 'Yes' : 'No'}.`
       },
       instruments: [],
-      ritualContext: 'Field Documentation',
+      ritualContext: '',
       motifs: [],
       relatedIds: [],
 

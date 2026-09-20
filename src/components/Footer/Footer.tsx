@@ -1,14 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Footer.module.css';
-import { ActiveTab } from '../Header/Header';
 import { ShieldCheckIcon } from '../common/Icons';
 
 interface FooterProps {
-  onTabChange: (tab: ActiveTab) => void;
-  onOpenContribute: () => void;
+  onSelectTradition: (query: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onTabChange, onOpenContribute }) => {
+export const Footer: React.FC<FooterProps> = ({ onSelectTradition }) => {
+  const navigate = useNavigate();
+
+  const handleModuleClick = (path: string) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.footerInner}`}>
@@ -30,11 +36,10 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onOpenContribute })
         <div>
           <div className={styles.colHeading}>Archive Modules</div>
           <ul className={styles.linkList}>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Orality Search Portal</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('graph')}>Thematic Knowledge Graph</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('map')}>Cultural Atlas Map</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('gallery')}>Visual Archive Gallery</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('recorder')}>Field Recorder</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/search')}>Orality Search Portal</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/graph')}>Thematic Knowledge Graph</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/map')}>Cultural Atlas Map</button></li>
+            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/recorder')}>Field Recorder</button></li>
           </ul>
         </div>
 
@@ -42,40 +47,26 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onOpenContribute })
         <div>
           <div className={styles.colHeading}>Living Traditions</div>
           <ul className={styles.linkList}>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Villu Paatu (Tamil Nadu)</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Theyyam Thottam (Kerala)</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Tenkutittu Yakshagana (Karnataka)</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Burrakatha (Andhra Pradesh)</button></li>
-            <li className={styles.linkItem}><button onClick={() => onTabChange('search')}>Oggu Katha (Telangana)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onSelectTradition('Villu Paatu')}>Villu Paatu (Tamil Nadu)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onSelectTradition('Theyyam Thottam')}>Theyyam Thottam (Kerala)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onSelectTradition('Tenkutittu Yakshagana')}>Tenkutittu Yakshagana (Karnataka)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onSelectTradition('Burrakatha')}>Burrakatha (Andhra Pradesh)</button></li>
+            <li className={styles.linkItem}><button onClick={() => onSelectTradition('Oggu Katha')}>Oggu Katha (Telangana)</button></li>
           </ul>
         </div>
 
         {/* Institutional Collaborations */}
         <div>
           <div className={styles.colHeading}>Community & Archival</div>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 12 }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
             Field recordings preserved in alignment with UNESCO Intangible Cultural Heritage standards and Sangeet Natak Akademi guidelines.
           </p>
-          <button
-            style={{
-              padding: '8px 16px',
-              borderRadius: 'var(--radius-full)',
-              background: 'rgba(217, 107, 39, 0.2)',
-              border: '1px solid rgba(217, 107, 39, 0.5)',
-              color: 'var(--text-saffron)',
-              fontSize: '0.8rem',
-              fontWeight: 600
-            }}
-            onClick={onOpenContribute}
-          >
-            + Propose Oral Lore Archive
-          </button>
         </div>
       </div>
 
       <div className={`container ${styles.bottomBar}`}>
         <span>© {new Date().getFullYear()} Kalantar Digital Orality Preservation Mission. Dedicated to the hereditary bards of India.</span>
-        <span>Zero External Backends • Self-Contained High Fidelity Repository</span>
+        <span>Open-source cultural preservation project</span>
       </div>
     </footer>
   );

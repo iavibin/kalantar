@@ -49,7 +49,9 @@ export const TraditionCard: React.FC<TraditionCardProps> = ({
     <article className={styles.card}>
       <div>
         <div className={styles.cardHeader}>
-          <span className={styles.zoneBadge}>{tradition.culturalZone}</span>
+          <span className={styles.zoneBadge}>
+            {tradition.region || tradition.state || tradition.culturalZone}
+          </span>
           <div className={styles.headerRightArea}>
             {getStatusBadge()}
             {userRole === 'admin' && (
@@ -84,33 +86,68 @@ export const TraditionCard: React.FC<TraditionCardProps> = ({
         {/* Title Area */}
         <div className={styles.titleArea}>
           <h3 className={styles.cardTitle}>{tradition.title}</h3>
-          <div className={styles.vernacularTitle}>{tradition.vernacularTitle}</div>
+          {tradition.vernacularTitle &&
+            tradition.vernacularTitle.trim() !== '' &&
+            tradition.vernacularTitle !== tradition.title && (
+              <div className={styles.vernacularTitle}>{tradition.vernacularTitle}</div>
+            )}
           <div className={styles.dialectInfo}>
-            <span>{tradition.state}</span>
-            <span className={styles.dialectDot} />
-            <span className="text-gold">{tradition.dialect}</span>
+            <span>{tradition.region || tradition.state}</span>
+            {tradition.dialect &&
+              tradition.dialect.trim() !== '' &&
+              tradition.dialect !== 'Field Dialect' &&
+              tradition.dialect !== 'Unspecified' && (
+                <>
+                  <span className={styles.dialectDot} />
+                  <span className="text-gold">{tradition.dialect}</span>
+                </>
+              )}
           </div>
         </div>
 
         {/* Narrative Summary */}
-        <p className={styles.summary}>{tradition.summary}</p>
+        {tradition.summary && <p className={styles.summary}>{tradition.summary}</p>}
 
-        {/* Bard & Lineage Info */}
+        {/* Practitioner & Lineage Info */}
         <div className={styles.lineageInfo}>
-          <div className={styles.lineageLabel}>Hereditary Lineage & Performer</div>
-          <div className={styles.lineagePerformer}>{tradition.performerLineage.leadPerformer}</div>
-          <div className={styles.lineageClan}>{tradition.performerLineage.communityLineage}</div>
+          <div className={styles.lineageLabel}>Recorded Practitioner</div>
+          <div className={styles.lineagePerformer}>
+            {tradition.performerLineage?.leadPerformer || 'Recorded Practitioner'}
+            {tradition.practitionerAge ? (
+              <span className={styles.practitionerAge}> (Age {tradition.practitionerAge})</span>
+            ) : null}
+          </div>
+          {tradition.performerLineage?.communityLineage &&
+            tradition.performerLineage.communityLineage !== 'Field Community' &&
+            tradition.performerLineage.communityLineage !== 'Field Documentation' &&
+            tradition.performerLineage.communityLineage.trim() !== '' && (
+              <div className={styles.lineageClan}>
+                {tradition.performerLineage.communityLineage}
+              </div>
+            )}
         </div>
 
-        {/* Motifs & Tags */}
-        <div className={styles.tagsContainer}>
-          <span className={styles.tagItem}>
-            🔥 {tradition.tagMetadata.theme}
-          </span>
-          <span className={styles.tagItem}>
-            🎵 {tradition.tagMetadata.instruments[0] || tradition.instruments[0]}
-          </span>
-        </div>
+        {/* Optional Context Tags — only rendered when valid non-empty data exists */}
+        {((tradition.category && tradition.category !== 'Heroic Ballad') ||
+          (tradition.instruments && tradition.instruments.length > 0 && tradition.instruments[0]) ||
+          (tradition.tagMetadata?.theme &&
+            tradition.tagMetadata.theme !== 'Field Documentation' &&
+            tradition.tagMetadata.theme !== 'Oral Ballad')) && (
+          <div className={styles.tagsContainer}>
+            {tradition.category && tradition.category !== 'Heroic Ballad' && (
+              <span className={styles.tagItem}>📜 {tradition.category}</span>
+            )}
+            {tradition.instruments && tradition.instruments[0] && (
+              <span className={styles.tagItem}>🎵 {tradition.instruments[0]}</span>
+            )}
+            {tradition.tagMetadata?.theme &&
+              tradition.tagMetadata.theme !== 'Field Documentation' &&
+              tradition.tagMetadata.theme !== 'Oral Ballad' &&
+              tradition.tagMetadata.theme !== tradition.category && (
+                <span className={styles.tagItem}>🔥 {tradition.tagMetadata.theme}</span>
+              )}
+          </div>
+        )}
       </div>
 
       {/* Audio Teaser & Actions */}
@@ -125,16 +162,19 @@ export const TraditionCard: React.FC<TraditionCardProps> = ({
           </button>
 
           <div className={styles.audioDetails}>
-            <div className={styles.audioTitle}>{tradition.audioTrack.title}</div>
+            <div className={styles.audioTitle}>{tradition.audioTrack?.title || tradition.title}</div>
             <div className={styles.audioSub}>
-              <span>{formatDuration(tradition.audioTrack.durationSeconds)}</span>
+              <span>{formatDuration(tradition.audioTrack?.durationSeconds || 180)}</span>
               <span>•</span>
-              <span>{tradition.audioTrack.scaleOrRaga || 'Field Recording'}</span>
+              <span>{tradition.audioTrack?.scaleOrRaga || 'Field Recording'}</span>
             </div>
           </div>
 
           <div className={styles.miniWaveform}>
-            {tradition.audioTrack.waveformPeaks.slice(0, 8).map((peak, idx) => (
+            {(tradition.audioTrack?.waveformPeaks?.length
+              ? tradition.audioTrack.waveformPeaks.slice(0, 8)
+              : [0.35, 0.7, 0.9, 0.65, 0.85, 0.5, 0.75, 0.4]
+            ).map((peak, idx) => (
               <span
                 key={idx}
                 className={`${styles.miniWaveBar} ${isPlaying ? styles.miniWaveActive : ''}`}
