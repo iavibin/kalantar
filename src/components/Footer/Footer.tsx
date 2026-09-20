@@ -39,7 +39,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTradition }) => {
             <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/search')}>Orality Search Portal</button></li>
             <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/graph')}>Thematic Knowledge Graph</button></li>
             <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/map')}>Cultural Atlas Map</button></li>
-            <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/gallery')}>Visual Archive Gallery</button></li>
             <li className={styles.linkItem}><button onClick={() => handleModuleClick('/portal/recorder')}>Field Recorder</button></li>
           </ul>
         </div>

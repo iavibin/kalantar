@@ -97,7 +97,7 @@ export const SEEDED_TRADITIONS: Tradition[] = [
   },
   {
     id: 'trad-silambam-paattu',
-    coordinates: { lat: 9.92, lng: 78.12 },
+    coordinates: { lat: 9.85, lng: 78.48 },
     title: 'Silambam Por-Paattu (Martial Ballad)',
     vernacularTitle: 'சிலம்பப் போர்ப்பாட்டு — களரி வாய்மொழி மரபு',
     scriptLabel: 'Tamil Script',

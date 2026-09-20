@@ -30,6 +30,24 @@ Field Capture → Offline Storage → Human Verification → Cultural Knowledge 
 - IndexedDB
 - MediaRecorder API
 
+# Environment Setup (Cultural Atlas Map)
+
+The Cultural Lore Map uses the Google Maps JavaScript API via `@react-google-maps/api`.
+
+Before the map will render, a Google Maps JavaScript API key (frontend/browser-restricted key, no backend needed) must be added to a `.env` file in the project root:
+
+```bash
+cp .env.example .env
+```
+
+Set your API key in `.env`:
+
+```env
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+```
+
+> **Security Note:** For security, ensure this key is restricted to this site's domain (e.g., `localhost:5173/*` for local development and your production domain) under **API Restrictions & Application Restrictions (HTTP referrers)** in the [Google Cloud Console](https://console.cloud.google.com/google/maps-apis/credentials).
+
 # Run Locally
 
 ```bash
@@ -38,3 +56,4 @@ cd <project-folder>
 npm install
 npm run dev
 ```
+

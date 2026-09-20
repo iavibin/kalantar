@@ -1,6 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
+import {
+  GoogleMap,
+  MarkerF as Marker,
+  InfoWindowF as InfoWindow,
+  useJsApiLoader
+} from '@react-google-maps/api';
 import styles from './CulturalAtlas.module.css';
 import { Tradition } from '../../data/types';
 import { GraphIcon, BookOpenIcon, CompassIcon, MapIcon, SatelliteIcon } from '../common/Icons';
@@ -16,17 +20,86 @@ type BaseLayerType = 'street' | 'satellite';
 
 const LOCAL_STORAGE_LAYER_KEY = 'kalantar_map_layer';
 
-const STREET_TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-const STREET_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>';
+// Google Maps API Key from environment variable (Vite import.meta.env)
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
-const SATELLITE_TILE_URL =
-  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-const SATELLITE_ATTRIBUTION =
-  'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+// Default Framing: All India and South India
+const VIEW_FRAMES = {
+  all: { center: { lat: 22.0, lng: 79.5 }, zoom: 5 },
+  south: { center: { lat: 12.8, lng: 78.5 }, zoom: 7 }
+};
 
-const SATELLITE_LABELS_URL =
-  'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png';
+// Dark theme map styles tailored to Kalantar's aesthetic
+const DARK_MAP_STYLES: google.maps.MapTypeStyle[] = [
+  { elementType: 'geometry', stylers: [{ color: '#0f172a' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#0f172a' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#94a3b8' }] },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d4af37' }]
+  },
+  {
+    featureType: 'administrative.province',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#334155' }]
+  },
+  {
+    featureType: 'administrative.country',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#475569' }]
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#94a3b8' }]
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [{ color: '#132338' }]
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [{ color: '#1e293b' }]
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#0b1120' }]
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#64748b' }]
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry',
+    stylers: [{ color: '#273549' }]
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#152033' }]
+  },
+  {
+    featureType: 'transit',
+    elementType: 'geometry',
+    stylers: [{ color: '#182338' }]
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [{ color: '#070c18' }]
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#38bdf8' }]
+  }
+];
 
 const getEndangermentColor = (statusOrTradition: string | Tradition) => {
   const status =
@@ -43,15 +116,6 @@ const getEndangermentColor = (statusOrTradition: string | Tradition) => {
     default:
       return '#10b981';
   }
-};
-
-const escapeHtml = (str: string) => {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 };
 
 export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
@@ -78,81 +142,35 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
     traditionsWithCoords[0]?.id || ''
   );
 
+  const [selectedPopupTradition, setSelectedPopupTradition] = useState<Tradition | null>(
+    () => traditionsWithCoords[0] || null
+  );
+
   const activeTradition = useMemo(() => {
-    return traditionsWithCoords.find((t) => t.id === activeTraditionId) || traditionsWithCoords[0] || null;
+    return (
+      traditionsWithCoords.find((t) => t.id === activeTraditionId) ||
+      traditionsWithCoords[0] ||
+      null
+    );
   }, [traditionsWithCoords, activeTraditionId]);
 
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<L.Map | null>(null);
-  const streetLayerRef = useRef<L.TileLayer | null>(null);
-  const satelliteGroupRef = useRef<L.LayerGroup | null>(null);
-  const markersLayerRef = useRef<L.FeatureGroup | null>(null);
-  const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
+  const mapRef = useRef<google.maps.Map | null>(null);
 
-  // Initialize Leaflet Map Instance
-  useEffect(() => {
-    if (!mapContainerRef.current || mapInstanceRef.current) return;
+  // Load Google Maps JavaScript API via @react-google-maps/api
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY
+  });
 
-    const map = L.map(mapContainerRef.current, {
-      center: [22.0, 79.5],
-      zoom: 5,
-      minZoom: 4,
-      maxZoom: 18,
-      zoomControl: false
-    });
-
-    L.control.zoom({ position: 'topleft' }).addTo(map);
-
-    const streetLayer = L.tileLayer(STREET_TILE_URL, {
-      attribution: STREET_ATTRIBUTION,
-      subdomains: 'abcd',
-      maxZoom: 19
-    });
-    streetLayerRef.current = streetLayer;
-
-    const satelliteBase = L.tileLayer(SATELLITE_TILE_URL, {
-      attribution: SATELLITE_ATTRIBUTION,
-      maxZoom: 19
-    });
-
-    const satelliteLabels = L.tileLayer(SATELLITE_LABELS_URL, {
-      subdomains: 'abcd',
-      maxZoom: 19,
-      pane: 'overlayPane'
-    });
-
-    const satelliteGroup = L.layerGroup([satelliteBase, satelliteLabels]);
-    satelliteGroupRef.current = satelliteGroup;
-
-    if (baseLayer === 'satellite') {
-      satelliteGroup.addTo(map);
-    } else {
-      streetLayer.addTo(map);
-    }
-
-    const markersLayer = L.featureGroup().addTo(map);
-    markersLayerRef.current = markersLayer;
-
-    mapInstanceRef.current = map;
-
-    const resizeObserver = new ResizeObserver(() => {
-      map.invalidateSize();
-    });
-    resizeObserver.observe(mapContainerRef.current);
-
-    const timer = setTimeout(() => {
-      map.invalidateSize();
-    }, 150);
-
-    return () => {
-      clearTimeout(timer);
-      resizeObserver.disconnect();
-      map.remove();
-      mapInstanceRef.current = null;
-    };
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
   }, []);
 
-  // Base layer switcher: toggles TileLayer seamlessly without resetting center or zoom
+  const onMapUnmount = useCallback(() => {
+    mapRef.current = null;
+  }, []);
+
+  // Base layer switcher: Street (Dark styled roadmap) vs Satellite (Hybrid imagery)
   const handleLayerChange = (layer: BaseLayerType) => {
     if (layer === baseLayer) return;
     setBaseLayer(layer);
@@ -161,195 +179,87 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
     } catch {
       // Ignore
     }
-
-    const map = mapInstanceRef.current;
-    const streetLayer = streetLayerRef.current;
-    const satelliteGroup = satelliteGroupRef.current;
-
-    if (map && streetLayer && satelliteGroup) {
-      if (layer === 'street') {
-        if (map.hasLayer(satelliteGroup)) {
-          map.removeLayer(satelliteGroup);
-        }
-        if (!map.hasLayer(streetLayer)) {
-          map.addLayer(streetLayer);
-        }
-      } else {
-        if (map.hasLayer(streetLayer)) {
-          map.removeLayer(streetLayer);
-        }
-        if (!map.hasLayer(satelliteGroup)) {
-          map.addLayer(satelliteGroup);
-        }
-      }
+    if (mapRef.current) {
+      mapRef.current.setMapTypeId(layer === 'satellite' ? 'hybrid' : 'roadmap');
     }
   };
 
-  // Top view mode switcher: smoothly animates camera to nationwide or southern peninsular view
+  // View mode switcher: All India framing vs South India focus
   const handleViewModeChange = (mode: MapViewMode) => {
     setViewMode(mode);
-    const map = mapInstanceRef.current;
-    if (!map) return;
+    if (!mapRef.current) return;
 
-    if (mode === 'south') {
-      map.flyTo([12.8, 78.5], 7, { duration: 1.2 });
-    } else {
-      map.flyTo([22.0, 79.5], 5, { duration: 1.2 });
+    const frame = VIEW_FRAMES[mode];
+    mapRef.current.panTo(frame.center);
+    mapRef.current.setZoom(frame.zoom);
+  };
+
+  // Marker click handler
+  const handleMarkerClick = (tradition: Tradition) => {
+    setActiveTraditionId(tradition.id);
+    setSelectedPopupTradition(tradition);
+    if (mapRef.current && tradition.coordinates) {
+      mapRef.current.panTo({
+        lat: tradition.coordinates.lat,
+        lng: tradition.coordinates.lng
+      });
     }
   };
-
-  // Create High-Contrast Custom DivIcon for tradition markers
-  const createMarkerIcon = (tradition: Tradition, isSelected: boolean) => {
-    const pinColor = getEndangermentColor(tradition.vulnerabilityStatus);
-    const activeClass = isSelected ? styles.markerSelected : '';
-    const dialectText = escapeHtml(tradition.dialect || tradition.title);
-
-    return L.divIcon({
-      className: styles.markerIconWrapper,
-      html: `
-        <div class="${styles.markerPin} ${activeClass}" style="--pin-color: ${pinColor};" role="button" aria-label="${escapeHtml(tradition.title)}">
-          <div class="${styles.markerPinBody}">
-            <div class="${styles.markerHalo}"></div>
-            <div class="${styles.markerPulse}"></div>
-            <div class="${styles.markerHead}">
-              <div class="${styles.markerCore}"></div>
-            </div>
-            <div class="${styles.markerStem}"></div>
-          </div>
-          <div class="${styles.markerBadge}">
-            <span class="${styles.markerBadgeDot}" style="background-color: ${pinColor};"></span>
-            <span class="${styles.markerBadgeText}">${dialectText}</span>
-          </div>
-        </div>
-      `,
-      iconSize: [140, 40],
-      iconAnchor: [14, 34],
-      popupAnchor: [14, -36]
-    });
-  };
-
-  // Create popup HTML with lore dossier and knowledge graph actions
-  const createPopupHtml = (tradition: Tradition) => {
-    const pinColor = getEndangermentColor(tradition.vulnerabilityStatus);
-    const coords = tradition.coordinates
-      ? `${tradition.coordinates.lat.toFixed(2)}°N, ${tradition.coordinates.lng.toFixed(2)}°E`
-      : '';
-
-    return `
-      <div class="${styles.popupCard}">
-        <div class="${styles.popupBadgeRow}">
-          <span class="${styles.popupStatusBadge}" style="color: ${pinColor}; border-color: ${pinColor}60; background: ${pinColor}18;">
-            ${tradition.vulnerabilityStatus.toUpperCase()} VITALITY
-          </span>
-          ${coords ? `<span class="${styles.popupCoords}">${coords}</span>` : ''}
-        </div>
-        <h3 class="${styles.popupTitle}">${escapeHtml(tradition.title)}</h3>
-        ${
-          tradition.vernacularTitle
-            ? `<div class="${styles.popupVernacular}">${escapeHtml(tradition.vernacularTitle)}</div>`
-            : ''
-        }
-        <div class="${styles.popupRegion}">
-          <strong>Location:</strong> ${escapeHtml(tradition.region)}, ${escapeHtml(tradition.state)}
-        </div>
-        <p class="${styles.popupSummary}">${escapeHtml(tradition.summary)}</p>
-        <div class="${styles.popupActions}">
-          <button type="button" class="${styles.popupDossierBtn}" data-action="dossier" data-id="${tradition.id}">
-            Open Lore Dossier
-          </button>
-          <button type="button" class="${styles.popupGraphBtn}" data-action="graph" data-id="${tradition.id}">
-            Knowledge Graph
-          </button>
-        </div>
-      </div>
-    `;
-  };
-
-  // Render and sync markers on coordinate changes
-  useEffect(() => {
-    const map = mapInstanceRef.current;
-    const markersLayer = markersLayerRef.current;
-    if (!map || !markersLayer) return;
-
-    markersLayer.clearLayers();
-    markerMapRef.current.clear();
-
-    traditionsWithCoords.forEach((t) => {
-      const isSelected = t.id === activeTraditionId;
-      const icon = createMarkerIcon(t, isSelected);
-      const marker = L.marker([t.coordinates!.lat, t.coordinates!.lng], {
-        icon,
-        riseOnHover: true
-      });
-
-      marker.bindPopup(createPopupHtml(t), {
-        maxWidth: 340,
-        minWidth: 260
-      });
-
-      marker.on('click', () => {
-        setActiveTraditionId(t.id);
-      });
-
-      marker.addTo(markersLayer);
-      markerMapRef.current.set(t.id, marker);
-    });
-  }, [traditionsWithCoords, activeTraditionId]);
-
-  // Handle action buttons inside Leaflet popups
-  useEffect(() => {
-    const map = mapInstanceRef.current;
-    if (!map) return;
-
-    const handlePopupOpen = (e: L.PopupEvent) => {
-      const popupEl = e.popup.getElement();
-      if (!popupEl) return;
-
-      const dossierBtn = popupEl.querySelector('button[data-action="dossier"]');
-      const graphBtn = popupEl.querySelector('button[data-action="graph"]');
-      const id = dossierBtn?.getAttribute('data-id') || graphBtn?.getAttribute('data-id');
-      if (!id) return;
-
-      const tradition = traditions.find((t) => t.id === id);
-      if (!tradition) return;
-
-      if (dossierBtn) {
-        dossierBtn.addEventListener('click', (ev) => {
-          ev.preventDefault();
-          ev.stopPropagation();
-          onOpenDossier(tradition);
-        });
-      }
-
-      if (graphBtn) {
-        graphBtn.addEventListener('click', (ev) => {
-          ev.preventDefault();
-          ev.stopPropagation();
-          onOpenGraphNode(id);
-        });
-      }
-    };
-
-    map.on('popupopen', handlePopupOpen);
-    return () => {
-      map.off('popupopen', handlePopupOpen);
-    };
-  }, [traditions, onOpenDossier, onOpenGraphNode]);
 
   // Select tradition from quick sidebar list and focus on map
   const handleSelectFromList = (tradition: Tradition) => {
     setActiveTraditionId(tradition.id);
-    const map = mapInstanceRef.current;
-    if (map && tradition.coordinates) {
-      map.flyTo([tradition.coordinates.lat, tradition.coordinates.lng], Math.max(map.getZoom(), 7), {
-        duration: 1.0
+    setSelectedPopupTradition(tradition);
+    if (mapRef.current && tradition.coordinates) {
+      mapRef.current.panTo({
+        lat: tradition.coordinates.lat,
+        lng: tradition.coordinates.lng
       });
-      const marker = markerMapRef.current.get(tradition.id);
-      if (marker) {
-        marker.openPopup();
-      }
+      mapRef.current.setZoom(Math.max(mapRef.current.getZoom() || 7, 7));
     }
   };
+
+  // SVG Marker Generator
+  const getMarkerIcon = useCallback(
+    (tradition: Tradition, isSelected: boolean) => {
+      const pinColor = getEndangermentColor(tradition.vulnerabilityStatus);
+      const stroke = isSelected ? '#ffffff' : '#090d16';
+      const strokeWidth = isSelected ? 2.5 : 1.5;
+      const r = isSelected ? 9 : 7;
+      const haloR = isSelected ? 16 : 12;
+      const haloOpacity = isSelected ? 0.35 : 0.18;
+
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+        <circle cx="18" cy="18" r="${haloR}" fill="${pinColor}" fill-opacity="${haloOpacity}" />
+        <circle cx="18" cy="18" r="${r}" fill="${pinColor}" stroke="${stroke}" stroke-width="${strokeWidth}" />
+        <circle cx="18" cy="18" r="2.5" fill="#ffffff" />
+      </svg>`;
+
+      return {
+        url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
+        scaledSize: typeof google !== 'undefined' && google.maps ? new google.maps.Size(36, 36) : undefined,
+        anchor: typeof google !== 'undefined' && google.maps ? new google.maps.Point(18, 18) : undefined
+      };
+    },
+    []
+  );
+
+  // Map Options
+  const mapOptions = useMemo<google.maps.MapOptions>(
+    () => ({
+      styles: baseLayer === 'street' ? DARK_MAP_STYLES : undefined,
+      mapTypeId: baseLayer === 'satellite' ? 'hybrid' : 'roadmap',
+      disableDefaultUI: true,
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
+      gestureHandling: 'cooperative',
+      minZoom: 4,
+      maxZoom: 18
+    }),
+    [baseLayer]
+  );
 
   return (
     <section className={styles.atlasContainer} id="cultural-atlas-map">
@@ -388,7 +298,120 @@ export const CulturalAtlas: React.FC<CulturalAtlasProps> = ({
         {/* Main Map Card */}
         <div className={styles.mapCard}>
           <div className={styles.mapViewport}>
-            <div className={styles.mapContainer} ref={mapContainerRef} />
+            <div className={styles.mapContainer}>
+              {!GOOGLE_MAPS_API_KEY ? (
+                <div className={styles.apiKeyNotice}>
+                  <MapIcon size={36} color="var(--text-gold)" />
+                  <h3 className={styles.apiKeyNoticeTitle}>Google Maps API Key Required</h3>
+                  <p className={styles.apiKeyNoticeText}>
+                    To display the interactive Cultural Lore Map, please provide a valid{' '}
+                    <code>VITE_GOOGLE_MAPS_API_KEY</code> in your <code>.env</code> file.
+                  </p>
+                  <span className={styles.apiKeyHint}>
+                    See <code>README.md</code> for environment setup and Google Cloud domain restriction instructions.
+                  </span>
+                </div>
+              ) : loadError ? (
+                <div className={styles.apiKeyNotice}>
+                  <CompassIcon size={36} color="var(--text-saffron)" />
+                  <h3 className={styles.apiKeyNoticeTitle}>Unable to Load Google Maps</h3>
+                  <p className={styles.apiKeyNoticeText}>
+                    Failed to initialize the Google Maps JavaScript API. Please check your network connection
+                    and verify that your API key is authorized for this domain.
+                  </p>
+                </div>
+              ) : !isLoaded ? (
+                <div className={styles.mapLoading}>
+                  <div className={styles.loadingSpinner} />
+                  <span>Loading Cultural Lore Map...</span>
+                </div>
+              ) : (
+                <GoogleMap
+                  mapContainerStyle={{ width: '100%', height: '100%' }}
+                  center={VIEW_FRAMES[viewMode].center}
+                  zoom={VIEW_FRAMES[viewMode].zoom}
+                  options={mapOptions}
+                  onLoad={onMapLoad}
+                  onUnmount={onMapUnmount}
+                >
+                  {traditionsWithCoords.map((tradition) => {
+                    const isSelected = tradition.id === activeTraditionId;
+                    return (
+                      <Marker
+                        key={tradition.id}
+                        position={{
+                          lat: tradition.coordinates!.lat,
+                          lng: tradition.coordinates!.lng
+                        }}
+                        title={tradition.title}
+                        icon={getMarkerIcon(tradition, isSelected)}
+                        onClick={() => handleMarkerClick(tradition)}
+                      />
+                    );
+                  })}
+
+                  {selectedPopupTradition && selectedPopupTradition.coordinates && (
+                    <InfoWindow
+                      position={{
+                        lat: selectedPopupTradition.coordinates.lat,
+                        lng: selectedPopupTradition.coordinates.lng
+                      }}
+                      onCloseClick={() => setSelectedPopupTradition(null)}
+                    >
+                      <div className={styles.popupCard}>
+                        <div className={styles.popupBadgeRow}>
+                          <span
+                            className={styles.popupStatusBadge}
+                            style={{
+                              color: getEndangermentColor(selectedPopupTradition),
+                              borderColor: `${getEndangermentColor(selectedPopupTradition)}60`,
+                              background: `${getEndangermentColor(selectedPopupTradition)}18`
+                            }}
+                          >
+                            {selectedPopupTradition.vulnerabilityStatus.toUpperCase()} VITALITY
+                          </span>
+                          <span className={styles.popupCoords}>
+                            {selectedPopupTradition.coordinates.lat.toFixed(2)}°N,{' '}
+                            {selectedPopupTradition.coordinates.lng.toFixed(2)}°E
+                          </span>
+                        </div>
+
+                        <h3 className={styles.popupTitle}>{selectedPopupTradition.title}</h3>
+                        {selectedPopupTradition.vernacularTitle && (
+                          <div className={styles.popupVernacular}>
+                            {selectedPopupTradition.vernacularTitle}
+                          </div>
+                        )}
+
+                        <div className={styles.popupRegion}>
+                          <strong>Location:</strong> {selectedPopupTradition.region},{' '}
+                          {selectedPopupTradition.state}
+                        </div>
+
+                        <p className={styles.popupSummary}>{selectedPopupTradition.summary}</p>
+
+                        <div className={styles.popupActions}>
+                          <button
+                            type="button"
+                            className={styles.popupDossierBtn}
+                            onClick={() => onOpenDossier(selectedPopupTradition)}
+                          >
+                            Open Lore Dossier
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.popupGraphBtn}
+                            onClick={() => onOpenGraphNode(selectedPopupTradition.id)}
+                          >
+                            Knowledge Graph
+                          </button>
+                        </div>
+                      </div>
+                    </InfoWindow>
+                  )}
+                </GoogleMap>
+              )}
+            </div>
 
             {/* Google Maps-Style Floating Base Layer Switcher */}
             <div className={styles.layerSwitcher} role="group" aria-label="Map Base Layer">

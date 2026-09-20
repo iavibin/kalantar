@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import styles from './Header.module.css';
-import { SearchIcon, GraphIcon, MapIcon, ImageIcon, MicIcon, ShieldCheckIcon } from '../common/Icons';
+import { SearchIcon, GraphIcon, MapIcon, MicIcon, ShieldCheckIcon } from '../common/Icons';
 import { useAuth } from '../../context/AuthContext';
 
-export type ActiveTab = 'search' | 'graph' | 'map' | 'gallery' | 'recorder';
+export type ActiveTab = 'search' | 'graph' | 'map' | 'recorder';
 
 interface HeaderProps {
   onOpenAbout: () => void;
@@ -29,7 +29,6 @@ export const Header: React.FC<HeaderProps> = ({
               KALANTAR
               <span className={styles.vernacularBadge}>கலந்தர்</span>
             </div>
-            <span className={styles.brandSubtitle}>National Digital Archive for India's Oral Traditions</span>
           </div>
         </Link>
 
@@ -57,14 +56,6 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <MapIcon size={15} />
             <span>Cultural Map</span>
-          </NavLink>
-          <NavLink
-            to="/portal/gallery"
-            className={({ isActive }) => `${styles.tabBtn} ${isActive ? styles.tabBtnActive : ''}`}
-            id="nav-tab-gallery"
-          >
-            <ImageIcon size={15} />
-            <span>Gallery</span>
           </NavLink>
           <NavLink
             to="/portal/recorder"

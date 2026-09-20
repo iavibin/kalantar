@@ -6,7 +6,6 @@ import { SearchPortal } from '../components/Search/SearchPortal';
 import { AudioPlayer } from '../components/AudioPlayer/AudioPlayer';
 import { KnowledgeGraph } from '../components/KnowledgeGraph/KnowledgeGraph';
 import { CulturalAtlas } from '../components/CulturalAtlas/CulturalAtlas';
-import { Gallery } from '../components/Gallery/Gallery';
 import { TraditionModal } from '../components/TraditionModal/TraditionModal';
 import { ContributeModal } from '../components/ContributeModal/ContributeModal';
 import { FieldRecorder } from '../components/FieldRecorder/FieldRecorder';
@@ -185,6 +184,7 @@ export const Portal: React.FC = () => {
   };
 
   const handleFooterSelectTradition = (traditionQuery: string) => {
+    setFilters({ sortBy: 'recommended' });
     setSearchQuery(traditionQuery);
     navigate('/portal/search');
     setTimeout(() => {
@@ -385,24 +385,6 @@ export const PortalMap: React.FC = () => {
   return (
     <main className="container">
       <CulturalAtlas
-        traditions={traditions}
-        onOpenDossier={handleOpenDossier}
-        onOpenGraphNode={handleOpenGraphNode}
-      />
-    </main>
-  );
-};
-
-export const PortalGallery: React.FC = () => {
-  const {
-    traditions,
-    handleOpenDossier,
-    handleOpenGraphNode
-  } = usePortalContext();
-
-  return (
-    <main className="container">
-      <Gallery
         traditions={traditions}
         onOpenDossier={handleOpenDossier}
         onOpenGraphNode={handleOpenGraphNode}

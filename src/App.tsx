@@ -6,7 +6,6 @@ import {
   PortalSearch,
   PortalGraph,
   PortalMap,
-  PortalGallery,
   PortalRecorder
 } from './pages/Portal';
 import { AuthProvider } from './context/AuthContext';
@@ -22,7 +21,6 @@ export const App: React.FC = () => {
             <Route path="search" element={<PortalSearch />} />
             <Route path="graph" element={<PortalGraph />} />
             <Route path="map" element={<PortalMap />} />
-            <Route path="gallery" element={<PortalGallery />} />
             <Route path="recorder" element={<PortalRecorder />} />
             <Route path="*" element={<Navigate to="search" replace />} />
           </Route>

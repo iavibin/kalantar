@@ -322,71 +322,117 @@
   letter-spacing: 0.02em;
 }
 
-/* Leaflet Custom Global Overrides */
-.mapContainer :global(.leaflet-popup-content-wrapper) {
+/* Google Maps Custom Global Overrides */
+.mapContainer :global(.gm-style) {
+  font-family: var(--font-body) !important;
+}
+
+.mapContainer :global(.gm-style-iw-c) {
   background: rgba(13, 19, 33, 0.96) !important;
   color: #f8fafc !important;
   border: 1px solid rgba(212, 175, 55, 0.45) !important;
   border-radius: var(--radius-lg) !important;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85) !important;
   backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
+  padding: 14px 16px !important;
+  max-width: 340px !important;
+}
+
+.mapContainer :global(.gm-style-iw-d) {
+  overflow: hidden !important;
+  color: #f8fafc !important;
+  max-width: 320px !important;
   padding: 0 !important;
-  overflow: hidden;
 }
 
-.mapContainer :global(.leaflet-popup-content) {
-  margin: 14px 16px !important;
-  line-height: 1.5 !important;
-}
-
-.mapContainer :global(.leaflet-popup-tip) {
+.mapContainer :global(.gm-style-iw-tc::after) {
   background: rgba(13, 19, 33, 0.96) !important;
-  border: 1px solid rgba(212, 175, 55, 0.45) !important;
 }
 
-.mapContainer :global(.leaflet-popup-close-button) {
-  color: #94a3b8 !important;
-  padding: 8px !important;
+.mapContainer :global(.gm-ui-hover-effect) {
+  filter: invert(1) grayscale(1) !important;
   top: 6px !important;
   right: 6px !important;
+  opacity: 0.7 !important;
 }
 
-.mapContainer :global(.leaflet-popup-close-button:hover) {
-  color: #f8fafc !important;
+.mapContainer :global(.gm-ui-hover-effect:hover) {
+  opacity: 1 !important;
 }
 
-.mapContainer :global(.leaflet-control-zoom) {
-  border: 1px solid rgba(212, 175, 55, 0.35) !important;
-  border-radius: var(--radius-md) !important;
-  overflow: hidden !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+/* API Key Notice & Loading states */
+.apiKeyNotice {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 24px;
+  text-align: center;
+  background: radial-gradient(circle at center, rgba(20, 29, 47, 0.9) 0%, rgba(9, 13, 22, 0.98) 100%);
+  color: var(--text-secondary);
 }
 
-.mapContainer :global(.leaflet-control-zoom a) {
-  background: rgba(13, 19, 33, 0.92) !important;
-  color: #f8fafc !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-  transition: all 0.2s ease !important;
+.apiKeyNoticeTitle {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  color: var(--text-gold);
+  margin: 16px 0 10px;
 }
 
-.mapContainer :global(.leaflet-control-zoom a:hover) {
-  background: rgba(217, 107, 39, 0.35) !important;
-  color: #fef08a !important;
+.apiKeyNoticeText {
+  font-size: 0.92rem;
+  max-width: 500px;
+  line-height: 1.6;
+  margin: 0 0 16px;
+  color: var(--text-secondary);
 }
 
-.mapContainer :global(.leaflet-control-attribution) {
-  background: rgba(10, 15, 29, 0.8) !important;
-  color: #94a3b8 !important;
-  font-size: 10px !important;
-  padding: 2px 8px !important;
-  border-top-left-radius: 6px !important;
-  backdrop-filter: blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
+.apiKeyNoticeText code {
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--text-gold);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
 }
 
-.mapContainer :global(.leaflet-control-attribution a) {
-  color: #d4af37 !important;
+.apiKeyHint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.mapLoading {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--bg-surface-1);
+  color: var(--text-gold);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.loadingSpinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(212, 175, 55, 0.2);
+  border-top-color: var(--text-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Popup Content Card */
@@ -444,6 +490,7 @@
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

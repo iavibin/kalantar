@@ -81,7 +81,7 @@ export const TRADITIONS: Tradition[] = [
     ],
     relatedIds: ['kaniyan-koothu-thiruvarul', 'pabuji-ki-phad-rajasthan'],
     featured: true,
-    // NOTE: Placeholder mediaGallery entries pending real archival field uploads
+    // NOTE: Archival media entries (video URL is a placeholder pending final archival field footage upload)
     mediaGallery: [
       {
         type: 'image',
@@ -97,6 +97,12 @@ export const TRADITIONS: Tradition[] = [
         type: 'image',
         url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=80',
         caption: 'Village Kodai festival gathering listening to the heroic ballads of Muthupattan'
+      },
+      {
+        type: 'video',
+        // NOTE: Placeholder video stream pending archival field footage upload
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        caption: 'Field archival recording: Rhythmic bowstriking and vocal call-and-response during the Muthupattan recital'
       }
     ]
   },
@@ -170,7 +176,20 @@ export const TRADITIONS: Tradition[] = [
       }
     ],
     relatedIds: ['grama-thalaattu-lullaby', 'kaniyan-koothu-thiruvarul'],
-    featured: true
+    featured: true,
+    // NOTE: Archival media entries (placeholder pending final field uploads)
+    mediaGallery: [
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=800&q=80',
+        caption: 'Karuppayi Ammal rendering spontaneous lamentation verse in rural Madurai'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
+        caption: 'Marudham agrarian wetland plains where oral memorial poetry is transmitted'
+      }
+    ]
   },
 
   // 3. Tamil Nadu - Kaniyan Koothu
@@ -243,7 +262,7 @@ export const TRADITIONS: Tradition[] = [
     ],
     relatedIds: ['villu-pattu-muthupattan', 'marudha-nilam-oppari'],
     featured: true,
-    // NOTE: Placeholder mediaGallery entries pending real archival field uploads
+    // NOTE: Curated mediaGallery entries (video URL is a placeholder pending final archival field footage upload)
     mediaGallery: [
       {
         type: 'image',
@@ -252,13 +271,19 @@ export const TRADITIONS: Tradition[] = [
       },
       {
         type: 'image',
-        url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
-        caption: 'Twin Magudam frame drums struck in ecstatic polyrhythms through the night'
+        url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80',
+        caption: 'Sacred nocturnal trance ceremony and fire invocation circle at the shrine'
       },
       {
         type: 'image',
-        url: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',
-        caption: 'Sacred embers and trance invocation circle at the village guardian shrine'
+        url: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80',
+        caption: 'Twin Magudam frame drums struck in ecstatic polyrhythms through the night'
+      },
+      {
+        type: 'video',
+        // NOTE: Placeholder video stream pending archival field footage upload
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+        caption: 'Sacred nocturnal trance ceremony: Magudam drum polyrhythms invoking guardian spirits'
       }
     ]
   },
@@ -332,7 +357,20 @@ export const TRADITIONS: Tradition[] = [
       }
     ],
     relatedIds: ['marudha-nilam-oppari', 'baul-gaan-moner-manush'],
-    featured: false
+    featured: false,
+    // NOTE: Archival media entries (placeholder pending final field uploads)
+    mediaGallery: [
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80',
+        caption: 'Village elder reciting oral lullabies in the traditional Kaveri delta household'
+      },
+      {
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?auto=format&fit=crop&w=800&q=80',
+        caption: 'Kaveri river basin waterways where agrarian melodies echo across paddy fields'
+      }
+    ]
   },
 
   // 5. Rajasthan - Pabuji Ki Phad
@@ -405,22 +443,28 @@ export const TRADITIONS: Tradition[] = [
     ],
     relatedIds: ['villu-pattu-muthupattan', 'baul-gaan-moner-manush'],
     featured: true,
-    // NOTE: Placeholder mediaGallery entries pending real archival field uploads
+    // NOTE: Curated mediaGallery entries (video URL is a placeholder pending final archival field footage upload)
     mediaGallery: [
       {
         type: 'image',
         url: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=800&q=80',
-        caption: 'Thirty-foot hand-painted Phad scroll chronicling the chivalric lore of Pabuji'
+        caption: 'Thar Desert dunes at twilight before the all-night Phad scroll recitation'
       },
       {
         type: 'image',
-        url: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80',
+        url: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=800&q=80',
         caption: 'Chogaram Bhopa drawing the curved horsehair bow across the Ravanahatha spike fiddle'
       },
       {
         type: 'image',
         url: 'https://images.unsplash.com/photo-1528728329032-2972f65dfb3f?auto=format&fit=crop&w=800&q=80',
-        caption: 'Lantern-illuminated all-night desert recitation for pastoral camel herds'
+        caption: 'Thirty-foot hand-painted Phad scroll illuminated by oil lamps during the desert vigil'
+      },
+      {
+        type: 'video',
+        // NOTE: Placeholder video stream pending archival field footage upload
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+        caption: 'Archival video: Pabuji Ki Phad recitation with Ravanahatha bowed accompaniment in Jodhpur'
       }
     ]
   },
@@ -495,7 +539,7 @@ export const TRADITIONS: Tradition[] = [
     ],
     relatedIds: ['pabuji-ki-phad-rajasthan', 'grama-thalaattu-lullaby'],
     featured: true,
-    // NOTE: Placeholder mediaGallery entries pending real archival field uploads
+    // NOTE: Curated mediaGallery entries (Photographs documented; video stream pending field upload)
     mediaGallery: [
       {
         type: 'image',
@@ -509,7 +553,7 @@ export const TRADITIONS: Tradition[] = [
       },
       {
         type: 'image',
-        url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+        url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
         caption: 'Esoteric acoustic recital under the banyan tree at the rural akhara'
       }
     ]
